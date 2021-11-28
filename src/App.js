@@ -16,7 +16,9 @@ function App() {
   const initialState = {
     adminLoggedIn: false,
     user: {
-      registerToken: "",
+      uniqueId: "",
+      username: "",
+      password: "",
     },
   }
 
@@ -32,7 +34,14 @@ function App() {
         draft.adminLoggedIn = false
         return
       case "otpSend":
-        draft.user.registerToken = action.value
+        draft.user.uniqueId = action.value
+        return
+      case "saveUsername":
+        draft.user.username = action.value
+        return
+      case "savePassword":
+        draft.user.password = action.value
+        return
     }
   }
 
