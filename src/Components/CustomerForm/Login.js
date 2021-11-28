@@ -1,7 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { useImmerReducer } from "use-immer"
-
+import { withRouter } from "react-router"
+import DispatchContext from "../../DispatchContext"
 function Login() {
+  const appDispatch = useContext(DispatchContext)
   const initialState = {
     username: {
       value: "",
@@ -17,7 +19,9 @@ function Login() {
       value: "",
       hasErrors: false,
       message: "",
+      match: false,
     },
+    submitCount: 0,
   }
   function ourReducer(draft, action) {
     switch (action.type) {
@@ -38,20 +42,48 @@ function Login() {
           draft.username.hasErrors = true
           draft.username.message = "You must provide a username"
         }
+        return
       case "passwordRules":
         if (draft.password.value.trim() == "") {
           draft.password.hasErrors = true
           draft.password.message = "You must provide a password"
         }
+        return
       case "confirmPasswordRules":
         if (draft.confirmPassword.value.trim() == "") {
           draft.confirmPassword.hasErrors = true
-          draft.confirmPassword.message = "You must provide a password"
+          draft.confirmPassword.message = "You must confirm the password"
+        }
+        if (draft.password.value !== draft.confirmPassword.value) {
+          console.log("password do not matched")
+          draft.confirmPassword.hasErrors = true
+          draft.confirmPassword.message = "password do not match"
+        }
+        return
+      case "formSubmit":
+        if (!draft.username.hasErrors && !draft.password.hasErrors && !draft.confirmPassword.hasErrors) {
+          draft.submitCount++
+          console.log(draft.submitCount, "submitcount")
         }
     }
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
+
+  useEffect(() => {
+    if (state.submitCount >= 1) {
+      appDispatch({ type: "saveUsername", value: state.username.value })
+      appDispatch({ type: "savePassword", value: state.password.value })
+    }
+  }, [state.submitCount])
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    dispatch({ type: "usernameRules" })
+    dispatch({ type: "passwordRules" })
+    dispatch({ type: "confirmPasswordRules" })
+    dispatch({ type: "formSubmit" })
+  }
   return (
     <div className="container">
       <div className="card">
@@ -88,11 +120,15 @@ function Login() {
               <input onBlur={(e) => dispatch({ type: "confirmPasswordRules", value: e.target.value })} onChange={(e) => dispatch({ type: "confirmPasswordChange", value: e.target.value })} type="text" className="form-control" id="confirmPassword" placeholder="confirmPassword" />
             </div>
             {state.confirmPassword.hasErrors && <p className="text-danger">{state.confirmPassword.message}</p>}
+            {state.confirmPassword.match && <p className="text-success">{state.confirmPassword.message}</p>}
           </div>
+          <button onClick={handleSubmit} className="btn btn-primary">
+            Create Account
+          </button>
         </div>
       </div>
     </div>
   )
 }
 
-export default Login
+export default withRouter(Login)

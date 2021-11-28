@@ -1,41 +1,45 @@
 import React, { useContext, useEffect, useState } from "react"
-import { useImmerReducer } from "use-immer"
+import { withRouter } from "react-router"
 import axios from "axios"
 import StateContext from "../../StateContext"
-function Verification() {
+function Verification(props) {
   const appState = useContext(StateContext)
+  const [otp, setOtp] = useState(0)
   const [checkCount, setCheckCount] = useState(0)
+  const [error, setError] = useState("")
 
   function submitHandler(e) {
     e.preventDefault()
-    console.log("button Clicked")
-    async function sendOtp() {
-      try {
-        const response = await axios.post("http://localhost:8000/api/validateOTP", { uniqueId: "0e3e5642a57711dc80a258f0a6c38d6c", otp: "123456" })
-      } catch (e) {
-        console.log(e, "there was an error")
-      }
+    //check if the otp is 6 digits
+    console.log()
+    if (otp.toString().length === 6) {
+      //increase checkcount
+      setCheckCount(checkCount + 1)
     }
-
-    sendOtp()
-    setCheckCount(checkCount + 1)
-    console.log(checkCount)
   }
 
   useEffect(() => {
-    if (checkCount) {
-      console.log("this function ran")
-      async function sendOtp() {
+    console.log(checkCount, "from the useEffect")
+    const ourRequest = axios.CancelToken.source()
+    if (checkCount >= 1) {
+      async function register() {
         try {
-          const response = await axios.post("http://localhost:8000/api/validateOTP", { uniqueId: "0e3e5642a57711dc80a258f0a6c38d6c", otp: "123456" })
+          const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: appState.user.uniqueId, otp: 123456 }, { cancelToken: ourRequest.token })
+          console.log("registration form submitted")
+          console.log(response.data.data.uniqueId)
+          console.log(response.data)
+          // appDispatch({ type: "otpSend", value: response.data.data.uniqueId })
+          props.history.push("/customers/register/login")
         } catch (e) {
           console.log(e, "there was an error")
+          setError("Invalid Otp")
         }
       }
-
-      sendOtp()
+      register()
     }
-  }, checkCount)
+
+    return () => ourRequest.cancel()
+  }, [checkCount])
 
   return (
     <div className="container">
@@ -51,8 +55,9 @@ function Verification() {
           <div className="input-wrapper">
             <label htmlFor="email">Email</label>
             <div className="input-group">
-              <input type="text" className="form-input" />
+              <input onChange={(e) => setOtp(e.target.value)} type="text" className="form-input" maxLength="6" />
             </div>
+            {error && <p className="text-danger">Invalid OTP</p>}
           </div>
           <button className="btn btn-secondary">Clear</button>
           <button className="btn btn-primary mt-3" onClick={submitHandler}>
@@ -64,4 +69,4 @@ function Verification() {
   )
 }
 
-export default Verification
+export default withRouter(Verification)
