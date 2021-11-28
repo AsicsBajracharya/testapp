@@ -1,25 +1,77 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route } from "react-router-dom"
+import { useImmerReducer } from "use-immer"
+//components
+import AdminLoggedOut from "./Components/AdminLoggedOut"
+import Welcome from "./Components/Welcome"
+import ClientLoggedOut from "./Components/ClientLoggedOut"
+import CustomerForm from "./Components/CustomerForm"
+import AdminDashboard from "./Components/AdminDashboard"
+import PageNotFound from "./Components/PageNotFound"
 
+//context
+import StateContext from "./StateContext"
+import DispatchContext from "./DispatchContext"
+import { useEffect } from "react"
 function App() {
+  const initialState = {
+    adminLoggedIn: false,
+    user: {
+      registerToken: "",
+    },
+  }
+
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState)
+
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "adminLogin":
+        draft.adminLoggedIn = true
+        draft.user = action.data
+        return
+      case "adminLogOut":
+        draft.adminLoggedIn = false
+        return
+      case "otpSend":
+        draft.user.registerToken = action.value
+    }
+  }
+
+  useEffect(() => {
+    if (state.adminLoggedIn) {
+      console.log("user data", state.user)
+      localStorage.setItem("GurkhasAdminToken", state.user.data.token)
+      localStorage.setItem("GurkhasAdminUsername", state.user.data.user.email)
+    } else {
+      localStorage.removeItem("GurkhasAdminToken")
+      localStorage.removeItem("GurkhasAdminUsername")
+    }
+  }, [state.adminLoggedIn])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <StateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact>
+              <Welcome />
+            </Route>
+          </Switch>
+          <Route path="/admin" exact>
+            <AdminLoggedOut />
+          </Route>
+          <Route path="/admin/dashboard" exact>
+            <AdminDashboard />
+          </Route>
+          <Route path="/login" exact>
+            <ClientLoggedOut />
+          </Route>
+          <Route path="/customers/register">
+            <CustomerForm />
+          </Route>
+        </BrowserRouter>
+      </DispatchContext.Provider>
+    </StateContext.Provider>
+  )
 }
 
-export default App;
+export default App
