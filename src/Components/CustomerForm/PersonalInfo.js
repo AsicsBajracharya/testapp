@@ -11,7 +11,7 @@ function PersonalInfo() {
   const [startDate, setStartDate] = useState(new Date())
   const handleDate = ({ bsDate, adDate }) => {
     setBsDate({ date: bsDate })
-    setAdDate({ date: adDate })
+    setAdDate(adDate)
   }
 
   useEffect(() => {
