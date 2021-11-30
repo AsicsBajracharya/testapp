@@ -8,7 +8,7 @@ import { District } from "states-nepal"
 function PersonalInfo() {
   const [bsDate, setBsDate] = useState("")
   const [adDate, setAdDate] = useState(new Date())
-
+  const [startDate, setStartDate] = useState(new Date())
   const handleDate = ({ bsDate, adDate }) => {
     setBsDate({ date: bsDate })
     setAdDate({ date: adDate })
@@ -67,7 +67,7 @@ function PersonalInfo() {
                     <label htmlFor="personal_information-date_of_birth_ad">Date of Birth (A.D.)*</label>
                     <div className="input-group">
                       <input value={adDate.date} type="text" id="personal_information-date_of_birth_ad" className="form-control" required />
-                      {/* <DatePicker selected={adDate.date} onChange={(date) => setAdDate(date)} /> */}
+                      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
                     </div>
                   </div>
                 </div>
