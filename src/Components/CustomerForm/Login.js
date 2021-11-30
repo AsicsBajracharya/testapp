@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 import { withRouter } from "react-router"
 import DispatchContext from "../../DispatchContext"
-function Login() {
+import { getThemeProps } from "@mui/system"
+function Login(props) {
   const appDispatch = useContext(DispatchContext)
   const initialState = {
     username: {
@@ -74,6 +75,7 @@ function Login() {
     if (state.submitCount >= 1) {
       appDispatch({ type: "saveUsername", value: state.username.value })
       appDispatch({ type: "savePassword", value: state.password.value })
+      props.history.push("/customers/register/personalInfo")
     }
   }, [state.submitCount])
 
