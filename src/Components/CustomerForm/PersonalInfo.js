@@ -524,6 +524,178 @@ function PersonalInfo() {
         </div>
       </div>
       {/* account */}
+      <div className="card">
+        <div className="card-body">
+          <div className="card-header">
+            <h3>Occupation details</h3>
+          </div>
+          <div className="row">
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="occupation-occupation">Occupation</label>
+                <div className="input-group">
+                  <select name="" id="occupation-occupation" className="form-control">
+                    <option value="initial">Select your occupation</option>
+                    <option value="Business">Business</option>
+                    <option value="Farmer">Farmer</option>
+                    <option value="Government Service">Government Service</option>
+                    <option value="Housewife">Housewife</option>
+                    <option value="Others">Others</option>
+                    <option value="Professional">Professional</option>
+                    <option value="Public Sector">Public Sector</option>
+                    <option value="Private Sector">Private Sector</option>
+                    <option value="Retired">Retired</option>
+                    <option value="Service">Service</option>
+                    <option value="Student">Student</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="occupation-type_of_business">Type of Business</label>
+                <div className="input-group">
+                  <select name="" id="occupation-type_of_business" className="form-control">
+                    <option value="initial">Select a business</option>
+                    <option value="Production">Production</option>
+                    <option value="Service Oriented">Service Oriented</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="occupation-organization_name">Organization's Name</label>
+                <div className="input-group">
+                  <input type="text" id="occupation-organization_name" className="form-control" placeholder="Enter Your Organization's Name" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="occupation-organization_address">Address</label>
+                <div className="input-group">
+                  <input type="text" id="occupation-organization_address" className="form-control" placeholder="Enter Your Organization's Address" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="occupation-designation">Designation</label>
+                <div className="input-group">
+                  <input type="text" id="occupation-designation" className="form-control" placeholder="Enter Your designation in organization" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-12">
+              <p>Select your Financial Details</p>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <div className="input-group">
+                  <input type="radio" id="occupation-financial_details" className="form-control" />
+                  <label htmlFor="occupation-financial_details">Upto Rs. 1,00,000</label>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <div className="input-group">
+                  <input type="radio" id="occupation-financial_details" className="form-control" />
+                  <label htmlFor="occupation-financial_details">From Rs. 1,00,001 to Rs. 2,00,000</label>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <div className="input-group">
+                  <input type="radio" id="occupation-financial_details" className="form-control" />
+                  <label htmlFor="occupation-financial_details">From Rs. 2,00,001 to Rs. 5,00,000</label>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <div className="input-group">
+                  <input type="radio" id="occupation-financial_details" className="form-control" />
+                  <label htmlFor="occupation-financial_details">Above Rs. 5,00,000</label>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <div className="input-group">
+                  <input type="radio" id="occupation-financial_details" className="form-control" />
+                  <label htmlFor="occupation-financial_details">Not Available</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* occupation */}
+      <div className="card">
+        <div className="card-body">
+          <div className="card-header">
+            <h3>Document details</h3>
+          </div>
+          <div className="row">
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-pp_size_photo">Recent PP size photo</label>
+                <div className="input-group">
+                  <input type="file" id="document-pp_size_photo" className="form-control" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-thumbprint_left">Thumbprint left</label>
+                <div className="input-group">
+                  <input type="file" id="document-thumbprint_left" className="form-control" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-thumbprint_right">Thumbprint right</label>
+                <div className="input-group">
+                  <input type="file" id="document-thumbprint_right" className="form-control" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-governement_issued_card_front">Governement Issued Card - Front</label>
+                <div className="input-group">
+                  <input type="file" id="document-governement_issued_card_front" className="form-control" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-governement_issued_card_back">Government issued Card - Back</label>
+                <div className="input-group">
+                  <input type="file" id="document-governement_issued_card_back" className="form-control" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-wrapper">
+                <label htmlFor="document-signature">Signature</label>
+                <div className="input-group">
+                  <input type="file" id="document-signature" className="form-control" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Document */}
     </div>
   )
 }
