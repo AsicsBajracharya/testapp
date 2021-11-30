@@ -4,24 +4,35 @@ import "@sbmdkl/nepali-datepicker-reactjs/dist/index.css"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { District } from "states-nepal"
+import adbs from "ad-bs-converter"
 
+const data = require("../../Assets/province-district.json")
 function PersonalInfo() {
   const [bsDate, setBsDate] = useState("")
   const [adDate, setAdDate] = useState(new Date())
   const [startDate, setStartDate] = useState(new Date())
   const handleDate = ({ bsDate, adDate }) => {
+    console.log(data, "data")
     setBsDate({ date: bsDate })
-    setAdDate(adDate)
+    setAdDate({ date: adDate })
+    console.log("startdate", startDate)
+    console.log(new Date(adDate))
+    setStartDate(new Date(adDate))
+    console.log("startdate changed", startDate)
+    console.log(new Date(adDate).toISOString())
   }
 
-  useEffect(() => {
-    console.log("hello")
-    const dobNepali = document.getElementById("dob")
-    // const district = new District()
+  function handleAdDate(date) {
+    console.log(date)
+    setStartDate(date)
+    setBsDate(date)
+    console.log(adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne, "ad2bs convereter")
+    const convertedNepaliDate = adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne
+    const formattedNepaliDate = `${convertedNepaliDate.year}-${convertedNepaliDate.month}-${convertedNepaliDate.day}`
+    console.log("formatted nepali date", formattedNepaliDate)
+    setBsDate({ date: formattedNepaliDate })
+  }
 
-    // // const allDistricts = district.allDistricts()
-    // console.log("all districts", district.allDistricts())
-  }, [])
   return (
     <div className="container">
       <div className="card">
@@ -57,8 +68,8 @@ function PersonalInfo() {
                   <div className="input-wrapper">
                     <label htmlFor="personal_information-date_of_birth_bs">Date of Birth (B.S.)*</label>
                     <div className="input-group">
-                      <input type="text" id="personal_information-date_of_birth_bs" className="form-control" required />
-                      <Calendar onChange={handleDate} theme="deepdark" />
+                      <input type="text" id="personal_information-date_of_birth_bs" className="form-control" required value={bsDate.date} />
+                      <Calendar value={bsDate.date} onChange={handleDate} theme="deepdark" />
                     </div>
                   </div>
                 </div>
@@ -67,7 +78,7 @@ function PersonalInfo() {
                     <label htmlFor="personal_information-date_of_birth_ad">Date of Birth (A.D.)*</label>
                     <div className="input-group">
                       <input value={adDate.date} type="text" id="personal_information-date_of_birth_ad" className="form-control" required />
-                      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                      <DatePicker selected={startDate} onChange={handleAdDate} />
                     </div>
                   </div>
                 </div>
@@ -148,9 +159,11 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="personal_information-id_issued_district">ID Issued District*</label>
-                <div className="input-group">
-                  <input type="text" id="personal_information-id_issued_district" className="form-control" />
-                </div>
+                <select name="" id="personal_information-id_issued_district" className="form-control" required>
+                  {/* {data.map((item, i) => {
+                    return <option> {item}</option>
+                  })} */}
+                </select>
               </div>
             </div>
             <div className="col-md-4">
@@ -204,7 +217,6 @@ function PersonalInfo() {
                 <div className="input-group">
                   <select name="" id="address-province" className="form-control" required>
                     <option value="">Select a Province</option>
-
                   </select>
                 </div>
               </div>
@@ -214,7 +226,7 @@ function PersonalInfo() {
                 <label htmlFor="address-district">District*</label>
                 <div className="input-group">
                   <select name="" id="address-district" className="form-control" required>
-                    <option value="">Select a District</option>           
+                    <option value="">Select a District</option>
                   </select>
                 </div>
               </div>
@@ -222,7 +234,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-city">City</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-city" className="form-control" placeholder="Your City Name" />
                 </div>
               </div>
@@ -230,31 +242,31 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-municipality">Municipality*</label>
-                <div className="input-group">                   
-                  <input type="text" id="address-municipality" className="form-control" placeholder="Your Municipality VDC name" required/>
+                <div className="input-group">
+                  <input type="text" id="address-municipality" className="form-control" placeholder="Your Municipality VDC name" required />
                 </div>
               </div>
             </div>
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-locality_tole">Locality/Tole*</label>
-                <div className="input-group">                   
-                  <input type="text" id="address-locality_tole" className="form-control" placeholder="Enter your phones number" required/>
+                <div className="input-group">
+                  <input type="text" id="address-locality_tole" className="form-control" placeholder="Enter your phones number" required />
                 </div>
               </div>
             </div>
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-ward_no">Ward No*</label>
-                <div className="input-group">                   
-                  <input type="text" id="address-ward_no" className="form-control" placeholder="Enter your ward number" required/>
+                <div className="input-group">
+                  <input type="text" id="address-ward_no" className="form-control" placeholder="Enter your ward number" required />
                 </div>
               </div>
             </div>
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-block_no">Block No</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-block_no" className="form-control" placeholder="Enter your block number" />
                 </div>
               </div>
@@ -262,7 +274,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-telephone_number">Telephone Number</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-telephone_number" className="form-control" placeholder="Enter your phones number" />
                 </div>
               </div>
@@ -270,14 +282,10 @@ function PersonalInfo() {
             <div class="col-md-4">
               <p>Permanent Address</p>
               <div class="input-group">
-                  <input type="checkbox" class="form-input" id="permanent-address"/>
-                  <label for="permanent-address">Same as Current Address</label>
-
+                <input type="checkbox" class="form-input" id="permanent-address" />
+                <label for="permanent-address">Same as Current Address</label>
               </div>
             </div>
-            
-           
-
           </div>
 
           <div className="row">
@@ -285,7 +293,7 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="address-country">Country </label>
                 <div className="input-group">
-                  <select name="" id="address-country" className="form-control" >
+                  <select name="" id="address-country" className="form-control">
                     <option value="">Select a Country</option>
                   </select>
                 </div>
@@ -295,9 +303,8 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="address-province">Province</label>
                 <div className="input-group">
-                  <select name="" id="address-province" className="form-control" >
+                  <select name="" id="address-province" className="form-control">
                     <option value="">Select a Province</option>
-
                   </select>
                 </div>
               </div>
@@ -306,8 +313,8 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="address-district">District</label>
                 <div className="input-group">
-                  <select name="" id="address-district" className="form-control" >
-                    <option value="">Select a District</option>           
+                  <select name="" id="address-district" className="form-control">
+                    <option value="">Select a District</option>
                   </select>
                 </div>
               </div>
@@ -315,7 +322,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-city">City</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-city" className="form-control" placeholder="Your City Name" />
                 </div>
               </div>
@@ -323,7 +330,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-municipality">Municipality</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-municipality" className="form-control" placeholder="Your Municipality VDC name" />
                 </div>
               </div>
@@ -331,7 +338,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-locality_tole">Locality/Tole</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-locality_tole" className="form-control" placeholder="Permanent locality" />
                 </div>
               </div>
@@ -339,7 +346,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-ward_no">Ward No</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-ward_no" className="form-control" placeholder="Permanent ward no" />
                 </div>
               </div>
@@ -347,7 +354,7 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-block_no">Block No</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-block_no" className="form-control" placeholder="Permanent block no" />
                 </div>
               </div>
@@ -355,16 +362,12 @@ function PersonalInfo() {
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="address-telephone_number">Telephone Number</label>
-                <div className="input-group">                   
+                <div className="input-group">
                   <input type="text" id="address-telephone_number" className="form-control" placeholder="Permanent Telephone number" />
                 </div>
               </div>
             </div>
-            
-           
-
           </div>
-
         </div>
       </div>
       {/* Address */}
@@ -378,7 +381,7 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="family-father_name">Father's Name*</label>
                 <div className="input-group">
-                  <input type="text" id="family-father_name" className="form-control" placeholder="Enter your Father's Name" required/>
+                  <input type="text" id="family-father_name" className="form-control" placeholder="Enter your Father's Name" required />
                 </div>
               </div>
             </div>
@@ -386,7 +389,7 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="family-grandfather_name">Grandfather's Name*</label>
                 <div className="input-group">
-                  <input type="text" id="family-grandfather_name" className="form-control" placeholder="Enter your Grandfather's Name" required/>
+                  <input type="text" id="family-grandfather_name" className="form-control" placeholder="Enter your Grandfather's Name" required />
                 </div>
               </div>
             </div>
@@ -394,7 +397,7 @@ function PersonalInfo() {
               <div className="input-wrapper">
                 <label htmlFor="family-mother_name">Mother's Name*</label>
                 <div className="input-group">
-                  <input type="text" id="family-mother_name" className="form-control" placeholder="Enter your Mother's Name" required/>
+                  <input type="text" id="family-mother_name" className="form-control" placeholder="Enter your Mother's Name" required />
                 </div>
               </div>
             </div>
@@ -441,12 +444,10 @@ function PersonalInfo() {
             <div className="col-md-4"></div>
             <div className="col-md-4">
               <div className="input-wrapper">
-
                 <div className="input-group">
-
-                  <input type="checkbox" class="form-input" id="family-add_nominee"/>
+                  <input type="checkbox" class="form-input" id="family-add_nominee" />
                   <label for="family-add_nominee">Do you want to add nominee?</label>
-                </div>                         
+                </div>
               </div>
             </div>
           </div>
@@ -472,64 +473,58 @@ function PersonalInfo() {
               </div>
             </div>
             <div className="col-md-4">
-                <div className="input-wrapper">
-                  <label htmlFor="account-bank_name">Bank Name*</label>
-                  <div className="input-group">
-                    <select name="" id="account-bank_name" className="form-control" required>
-                      <option value="">Select a Bank</option>
-                    </select>
-                  </div>
+              <div className="input-wrapper">
+                <label htmlFor="account-bank_name">Bank Name*</label>
+                <div className="input-group">
+                  <select name="" id="account-bank_name" className="form-control" required>
+                    <option value="">Select a Bank</option>
+                  </select>
                 </div>
+              </div>
             </div>
             <div className="col-md-4">
-                <div className="input-wrapper">
-                  <label htmlFor="account-branch">Branch*</label>
-                  <div className="input-group">
-                    <select name="" id="account-branch" className="form-control" required>
-                      <option value="">Select your branch</option>
-                    </select>
-                  </div>
+              <div className="input-wrapper">
+                <label htmlFor="account-branch">Branch*</label>
+                <div className="input-group">
+                  <select name="" id="account-branch" className="form-control" required>
+                    <option value="">Select your branch</option>
+                  </select>
                 </div>
+              </div>
             </div>
             <div className="col-md-4">
               <div className="input-wrapper">
                 <label htmlFor="account-bank_account_no">Bank Account No*</label>
                 <div className="input-group">
-                  <input type="text" name="" id="account-bank_account_no"  className="form-control" placeholder="Enter Bank account no" required/>
+                  <input type="text" name="" id="account-bank_account_no" className="form-control" placeholder="Enter Bank account no" required />
                 </div>
-
               </div>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
             <div class="col-md-4">
               <div class="input-group">
-                  <input type="checkbox" class="form-input" id="account-renew_my_demat"/>
-                  <label for="account-renew_my_demat">Renew my Demat Account automatically</label>
-
+                <input type="checkbox" class="form-input" id="account-renew_my_demat" />
+                <label for="account-renew_my_demat">Renew my Demat Account automatically</label>
               </div>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
             <div class="col-md-4">
               <div class="input-group">
-                  <input type="checkbox" class="form-input" id="account-open_mero_share"/>
-                  <label for="account-open_mero_share">Open Mero Share Account</label>
+                <input type="checkbox" class="form-input" id="account-open_mero_share" />
+                <label for="account-open_mero_share">Open Mero Share Account</label>
               </div>
             </div>
 
             <div class="col-md-12">
               <p>If you agree for this, the amount for renewal will be deducted from your Gurkhas Finance’s account</p>
-            </div>           
+            </div>
           </div>
         </div>
       </div>
       {/* account */}
-
-      
     </div>
-
-
   )
 }
 
