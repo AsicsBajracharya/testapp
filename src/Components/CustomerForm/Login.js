@@ -75,7 +75,7 @@ function Login(props) {
     if (state.submitCount >= 1) {
       appDispatch({ type: "saveUsername", value: state.username.value })
       appDispatch({ type: "savePassword", value: state.password.value })
-      props.history.push("/customers/register/personalInfo")
+      props.history.push("/customers/register/dematForm")
     }
   }, [state.submitCount])
 

@@ -1,0 +1,82 @@
+{
+  "customers": {
+    "demat_account_type": "1",
+    "full_name": "Daniel Lupton",
+    "email": "Daniel_Lupton@gmail.com",
+    "mobile": "9841097667",
+    "username": "Daniel.Lupton",
+    "password": "Test@123",
+    "is_minor": "1",
+    "nominee": "1"
+  },
+  "personal_informations": {
+    "dob": "1989-03-10",
+    "gender": "2",
+    "marital_status": "1",
+    "nationality": "1",
+    "pan_number": null,
+    "identity_card_type": "citizenship",
+    "identity_card_number": "123456789",
+    "identity_card_issue_district": "Kavrepalanchok",
+    "identity_card_issue_date": "2005-10-03"
+  },
+  "addresses": [
+    {
+      "type": "1",
+      "block_number": "00",
+      "phone_number": "9841097667",
+      "ward_number": "3",
+      "locality": "Khadbari",
+      "municipality": "Kathmandu",
+      "district": "Kathmandu",
+      "province": "3",
+      "country": "Nepal"
+    },
+    {
+      "type": "2",
+      "block_number": "00",
+      "phone_number": "9841097667",
+      "ward_number": "3",
+      "locality": "Khadbari",
+      "municipality": "Kathmandu",
+      "district": "Kathmandu",
+      "province": "3",
+      "country": "Nepal"
+    }
+  ],
+  "families": {
+    "father_name": "Ronald Gridley",
+    "grand_father_name": "Peter Whiting",
+    "mother_name": "Christina Stoglin",
+    "spouse": null,
+    "son_name": null,
+    "daughter_name": null,
+    "father_in_law_name": null,
+    "daughter_in_law_name": null
+  },
+  "occupations": {
+    "title": "Business",
+    "type": "Service Oriented",
+    "organization_name": "Unitech Media",
+    "address": "Chabahil",
+    "designation": "Assistant",
+    "financial_details": "3"
+  },
+  "accounts": {
+    "bank_name": "Bank of Kathmandu Ltd",
+    "bank_code": "1101",
+    "branch_name": "New Baneswor Branch",
+    "number": "00011231231238201",
+    "type": "1"
+  },
+  "documents": {
+    "photo": "photo.png",
+    "gov_issued_id_front": "gov_issued_id_front.png",
+    "gov_issued_id_back": "gov_issued_id_back.png",
+    "thumb_left": "thumb_left.png",
+    "thumb_right": "thumb_right.png",
+    "signature": "signature.png",
+    "lat": "27.6915196",
+    "long": "85.3420486"
+  }
+}

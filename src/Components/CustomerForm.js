@@ -4,7 +4,8 @@ import { Switch, Route, Link } from "react-router-dom"
 import Register from "./CustomerForm/Register"
 import Verification from "./CustomerForm/Verification"
 import Login from "./CustomerForm/Login"
-import PersonalInfo from "./CustomerForm/PersonalInfo"
+import PersonalInfo from "./CustomerForm/PersonalInfo-backup"
+import DematForm from "./CustomerForm/DematForm"
 function CustomerForm() {
   function handleSubmit() {
     console.log("form can be submitted")
@@ -16,6 +17,8 @@ function CustomerForm() {
         <Link to="/customers/register">register</Link>
         <Link to="/customers/register/verify">verify</Link>
         <Link to="/customers/register/login">login</Link>
+        <Link to="/customers/register/dematForm/personalInfo">login</Link>
+        <Link to="/customers/register/dematForm/address">login</Link>
       </div>
 
       <Switch>
@@ -29,8 +32,8 @@ function CustomerForm() {
           <Login />
         </Route>
         <form action="">
-          <Route path="/customers/register/personalInfo">
-            <PersonalInfo />
+          <Route path="/customers/register/DematForm">
+            <DematForm />
           </Route>
         </form>
       </Switch>
