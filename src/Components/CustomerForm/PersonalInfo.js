@@ -5,33 +5,120 @@ import Calendar from "@sbmdkl/nepali-datepicker-reactjs"
 import "@sbmdkl/nepali-datepicker-reactjs/dist/index.css"
 import adbs from "ad-bs-converter"
 import districts from "../../Assets/district-list-nepal"
+import { useImmerReducer } from "use-immer"
 function PersonalInfo() {
+  const [errors, setErrors] = useState([])
+  const [fullName, setFullName] = useState("")
+  const [mobile, setMobile] = useState("")
   const [bsDate, setBsDate] = useState("")
   const [adDate, setAdDate] = useState(new Date())
   const [startDate, setStartDate] = useState(new Date())
+  const initialState = {
+    fullName: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    mobile: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    email: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    dob: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    gender: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    maritalStatus: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    accountType: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    nationality: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    typeOfId: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    idNo: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    idIssueDistrict: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    idIssueDate: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+    pan: {
+      value: "",
+      hasErrors: false,
+      message: "",
+    },
+  }
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "default":
+        return
+    }
+  }
+
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
   const handleDate = ({ bsDate, adDate }) => {
     setBsDate({ date: bsDate })
     setAdDate({ date: adDate })
-    console.log("startdate", startDate)
-    console.log(new Date(adDate))
+    // console.log("startdate", startDate)
+    // console.log(new Date(adDate))
     setStartDate(new Date(adDate))
-    console.log("startdate changed", startDate)
-    console.log(new Date(adDate).toISOString())
+    // console.log("startdate changed", startDate)
+    // console.log(new Date(adDate).toISOString())
     // dispatch({ type: "dobChange", value: adDate })
   }
 
   function handleAdDate(date) {
-    console.log(date)
+    // console.log(date)
     setStartDate(date)
     setBsDate(date)
-    console.log(adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne, "ad2bs convereter")
+    // console.log(adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne, "ad2bs convereter")
     const convertedNepaliDate = adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne
     const formattedNepaliDate = `${convertedNepaliDate.year}-${convertedNepaliDate.month}-${convertedNepaliDate.day}`
     console.log("formatted nepali date", formattedNepaliDate)
     setBsDate({ date: formattedNepaliDate })
     // dispatch({ type: "dobChange", value: startDate })
   }
+  useEffect(() => {
+    console.log("hello from the personal info")
+    for (const key in state) {
+      // console.log(`${key}: ${state[key]}`)
+      var arr = state[key]
+      console.log("arr", arr.hasErrors)
+    }
+  }, [])
   return (
     <div className="card">
       <div className="card-body">
@@ -194,6 +281,9 @@ function PersonalInfo() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="card-footer ">
+        <span className="btn btn-primary">Submit</span>
       </div>
     </div>
   )
