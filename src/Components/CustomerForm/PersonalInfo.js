@@ -15,66 +15,79 @@ function PersonalInfo() {
   const [startDate, setStartDate] = useState(new Date())
   const initialState = {
     fullName: {
+      name: "fullName",
       value: "",
       hasErrors: false,
       message: "",
     },
     mobile: {
+      name: "mobile",
       value: "",
       hasErrors: false,
       message: "",
     },
+    name: "email",
     email: {
       value: "",
       hasErrors: false,
       message: "",
     },
     dob: {
+      name: "dob",
       value: "",
       hasErrors: false,
       message: "",
     },
     gender: {
+      name: "gender",
       value: "",
       hasErrors: false,
       message: "",
     },
     maritalStatus: {
+      name: "maritalStatus",
       value: "",
       hasErrors: false,
       message: "",
     },
     accountType: {
+      name: "accountType",
       value: "",
       hasErrors: false,
       message: "",
     },
     nationality: {
+      name: "nationality",
       value: "",
       hasErrors: false,
       message: "",
     },
     typeOfId: {
+      name: "typeOfId",
       value: "",
       hasErrors: false,
       message: "",
     },
     idNo: {
+      name: "idNo",
       value: "",
       hasErrors: false,
       message: "",
     },
     idIssueDistrict: {
+      name: "idIssueDistrict",
       value: "",
       hasErrors: false,
       message: "",
     },
     idIssueDate: {
+      name: "idIssueDate",
       value: "",
       hasErrors: false,
       message: "",
     },
     pan: {
+      name: "pan",
       value: "",
       hasErrors: false,
       message: "",
@@ -82,6 +95,13 @@ function PersonalInfo() {
   }
   function ourReducer(draft, action) {
     switch (action.type) {
+      case "inputChange":
+        for (const key in draft) {
+          if (draft[key].name == action.field) {
+            console.log(action.field, "fullname")
+            draft[key].value = action.value
+          }
+        }
       case "default":
         return
     }
@@ -114,9 +134,9 @@ function PersonalInfo() {
   useEffect(() => {
     console.log("hello from the personal info")
     for (const key in state) {
-      // console.log(`${key}: ${state[key]}`)
+      console.log(`${key}: ${state[key]}`)
       var arr = state[key]
-      console.log("arr", arr.hasErrors)
+      console.log("arr", state[key])
     }
   }, [])
   return (
@@ -127,7 +147,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-full_name">Full Name*</label>
               <div className="input-group">
-                <input type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
+                <input onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "fullName" })} type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
               </div>
             </div>
           </div>
