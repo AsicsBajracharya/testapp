@@ -6,100 +6,226 @@ import "@sbmdkl/nepali-datepicker-reactjs/dist/index.css"
 import adbs from "ad-bs-converter"
 import districts from "../../Assets/district-list-nepal"
 import { useImmerReducer } from "use-immer"
+import axios from "axios"
 function PersonalInfo() {
-  const [errors, setErrors] = useState([])
-  const [fullName, setFullName] = useState("")
-  const [mobile, setMobile] = useState("")
-  const [bsDate, setBsDate] = useState("")
-  const [adDate, setAdDate] = useState(new Date())
-  const [startDate, setStartDate] = useState(new Date())
   const initialState = {
     fullName: {
       name: "fullName",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     mobile: {
       name: "mobile",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
-    name: "email",
     email: {
+      name: "email",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
-    dob: {
-      name: "dob",
+    dobBs: {
+      name: "dobBs",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
+    },
+    dobAd: {
+      name: "dobAd",
+      value: new Date(),
+      hasErrors: false,
+      message: "",
+      touched: false,
     },
     gender: {
       name: "gender",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     maritalStatus: {
       name: "maritalStatus",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     accountType: {
       name: "accountType",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     nationality: {
       name: "nationality",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     typeOfId: {
       name: "typeOfId",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     idNo: {
       name: "idNo",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
     idIssueDistrict: {
       name: "idIssueDistrict",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
     },
-    idIssueDate: {
-      name: "idIssueDate",
+    idIssueDateBs: {
+      name: "idIssueDateBs",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
+    },
+    idIssueDate: {
+      name: "idIssueDate",
+      value: new Date(),
+      hasErrors: false,
+      message: "",
+      touched: false,
     },
     pan: {
       name: "pan",
       value: "",
       hasErrors: false,
       message: "",
+      touched: false,
+      checkCount: 0,
+      checkingNow: false,
     },
   }
   function ourReducer(draft, action) {
     switch (action.type) {
-      case "inputChange":
+      // case "inputChange":
+      //   for (const key in draft) {
+      //     if (draft[key].name == action.field) {
+      //       // console.log(action.field, "fullname")
+
+      //       if (action.value.trim() == "") {
+      //         draft[key].hasErrors = true
+      //         draft[key].message = `This field cannot be blank`
+      //         return
+      //       }
+      //       draft[key].value = action.value
+      //     }
+      //   }
+      //   return
+      // case "inputBlur":
+      //   console.log("this reducer hit")
+      //   for (const key in draft) {
+      //     if (draft[key].name == action.field) {
+      //       console.log("action.value", action.value)
+      //       if (action.value.trim() == "") {
+      //         draft[key].hasErrors = true
+      //         draft[key].message = `This field cannot be blank`
+      //         return
+      //       }
+      //       draft[key].value = action.value
+      //     }
+      //   }
+      //   return
+      case "fullNameChange":
+        draft.fullName.touched = true
+        if (action.value.length > 50) {
+          draft.fullName.hasErrors = true
+          draft.fullName.message = "Full name cannot exceed 50 characters"
+          return
+        }
+        draft.fullName.hasErrors = false
+        draft.fullName.value = action.value
+        return
+      case "validateFullName":
+        if (action.value.length < 3) {
+          draft.fullName.hasErrors = true
+          draft.fullName.message = "Full name must be alteast 3 chaacter's long"
+        }
+        return
+      case "mobileChange":
+        draft.mobile.touched = true
+        draft.mobile.hasErrors = false
+        draft.mobile.value = action.value
+        return
+      case "validateMobile":
+        if (action.value.length !== 10) {
+          draft.mobile.hasErrors = true
+          draft.mobile.message = "Mobile number must be 10 digits"
+        }
+        return
+      case "emailChange":
+        draft.email.touched = true
+        draft.email.hasErrors = false
+        draft.email.value = action.value
+        return
+      case "dobAdChange":
+        console.log("dobadchanged reducer hit")
+        draft.dobAd.touched = true
+        draft.dobAd.hasErrors = false
+        draft.dobAd.value = action.value
+        return
+      case "idIssueDateChange":
+        console.log("id issue date change reducer hit")
+        draft.idIssueDate.has = false
+        draft.idIssueDate.value = action.value
+        return
+      case "panChange":
+        draft.pan.hasErrors = false
+        draft.pan.value = action.value
+        return
+      case "validatePAN":
+        if (action.value.length < 9) {
+          draft.pan.hasErrors = true
+          draft.pan.message = "PAN number must not be less than 9 digits"
+          return
+        } else if (action.value.length > 9) {
+          draft.pan.hasErrors = true
+          draft.pan.message = "PAN number must not be more than 9 digits"
+          return
+        }
+        draft.pan.checkCount++
+        return
+      case "checkingPAN":
+        draft.pan.checkingNow = true
+        draft.pan.message = "Checking...."
+        return
+      case "panAvailable":
+        draft.pan.message = "PAN number available"
+        return
+      case "panUnavailable":
+        draft.pan.message = "PAN number already in use"
+        return
+      case "checkForErrors":
+        console.log("checking for errors")
         for (const key in draft) {
-          if (draft[key].name == action.field) {
-            console.log(action.field, "fullname")
-            draft[key].value = action.value
+          var touchedCount
+          var unTouchedCount
+          var errorCount
+
+          if (!draft[key].touched) {
+            draft[key].hasErrors = true
+            draft[key].message = "you must fill this field to navigate to the another step"
           }
         }
       case "default":
@@ -110,35 +236,60 @@ function PersonalInfo() {
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
   const handleDate = ({ bsDate, adDate }) => {
-    setBsDate({ date: bsDate })
-    setAdDate({ date: adDate })
-    // console.log("startdate", startDate)
-    // console.log(new Date(adDate))
-    setStartDate(new Date(adDate))
-    // console.log("startdate changed", startDate)
-    // console.log(new Date(adDate).toISOString())
-    // dispatch({ type: "dobChange", value: adDate })
+    dispatch({ type: "inputChange", value: bsDate, field: "dobBs" })
+    dispatch({ type: "dobAdChange", value: new Date(adDate), field: "dobAd" })
   }
 
-  function handleAdDate(date) {
-    // console.log(date)
-    setStartDate(date)
-    setBsDate(date)
-    // console.log(adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne, "ad2bs convereter")
+  const handleIdIssueDateBs = ({ bsDate, adDate }) => {
+    dispatch({ type: "inputChange", value: bsDate, field: "idIssueDateBs" })
+    dispatch({ type: "idIssueDateChange", value: new Date(adDate), field: "idIssueDate" })
+  }
+
+  function handleIdIssueDate(date) {
+    dispatch({ type: "idIssueDateChange", value: date, field: "idIssueDate" })
     const convertedNepaliDate = adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne
     const formattedNepaliDate = `${convertedNepaliDate.year}-${convertedNepaliDate.month}-${convertedNepaliDate.day}`
-    console.log("formatted nepali date", formattedNepaliDate)
-    setBsDate({ date: formattedNepaliDate })
-    // dispatch({ type: "dobChange", value: startDate })
+    dispatch({ type: "inputChange", value: formattedNepaliDate, field: "idIssueDateBs" })
+  }
+  function handleAdDate(date) {
+    dispatch({ type: "dobAdChange", value: date, field: "dobAd" })
+    const convertedNepaliDate = adbs.ad2bs(`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`).ne
+    const formattedNepaliDate = `${convertedNepaliDate.year}-${convertedNepaliDate.month}-${convertedNepaliDate.day}`
+    dispatch({ type: "inputChange", value: formattedNepaliDate, field: "dobBs" })
   }
   useEffect(() => {
     console.log("hello from the personal info")
     for (const key in state) {
-      console.log(`${key}: ${state[key]}`)
+      // console.log(`${key}: ${state[key]}`)
       var arr = state[key]
-      console.log("arr", state[key])
+      // console.log("arr", state[key])
     }
   }, [])
+
+  useEffect(() => {
+    const ourRequest = axios.CancelToken.source()
+    if (state.pan.checkCount) {
+      dispatch({ type: "checkingPAN" })
+      async function checkPan() {
+        try {
+          const response = await axios.get(`http://localhost:8000/api/verify_pan_number/${state.pan.value}`, { cancelToken: ourRequest.token })
+
+          console.log(response.data)
+          dispatch({ type: "panAvailable" })
+        } catch (e) {
+          console.log(e, "there was an error")
+          dispatch({ type: "panUnavailable" })
+        }
+      }
+      checkPan()
+    }
+
+    return () => ourRequest.cancel()
+  }, [state.pan.checkCount])
+
+  function handleSubmit() {
+    dispatch({ type: "checkForErrors" })
+  }
   return (
     <div className="card">
       <div className="card-body">
@@ -147,24 +298,27 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-full_name">Full Name*</label>
               <div className="input-group">
-                <input onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "fullName" })} type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
+                <input onBlur={(e) => dispatch({ type: "validateFullName", value: e.target.value, field: "fullName" })} onChange={(e) => dispatch({ type: "fullNameChange", value: e.target.value, field: "fullName" })} type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
               </div>
+              {state.fullName.hasErrors && <p className="text-danger">{state.fullName.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-mobile">Mobile*</label>
               <div className="input-group">
-                <input type="text" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
+                <input onBlur={(e) => dispatch({ type: "validateMobile", value: e.target.value, field: "mobile" })} onChange={(e) => dispatch({ type: "mobileChange", value: e.target.value, field: "mobile" })} type="number" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
               </div>
+              {state.mobile.hasErrors && <p className="text-danger">{state.mobile.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-email">Email*</label>
               <div className="input-group">
-                <input type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
+                <input onChange={(e) => dispatch({ type: "emailChange", value: e.target.value, field: "email" })} type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
               </div>
+              {state.email.hasErrors && <p className="text-danger">{state.email.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
@@ -173,18 +327,20 @@ function PersonalInfo() {
                 <div className="input-wrapper">
                   <label htmlFor="personal_information-date_of_birth_bs">Date of Birth (B.S.)*</label>
                   <div className="input-group">
-                    <input type="text" id="personal_information-date_of_birth_bs" className="form-control" required value={bsDate.date} />
-                    <Calendar value={bsDate.date} onChange={handleDate} theme="deepdark" />
+                    <input type="text" value={state.dobBs.value} id="personal_information-date_of_birth_bs" className="form-control" required />
+                    <Calendar className="form-control custom-control nepaliDate" value={state.dobBs.value} onChange={handleDate} theme="deepdark" />
                   </div>
+                  {state.dobBs.hasErrors && <p className="text-danger">{state.dobBs.message}</p>}
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="input-wrapper">
                   <label htmlFor="personal_information-date_of_birth_ad">Date of Birth (A.D.)*</label>
                   <div className="input-group">
-                    <input value={adDate.date} type="text" id="personal_information-date_of_birth_ad" className="form-control" required />
-                    <DatePicker selected={startDate} onChange={handleAdDate} />
+                    <input value={state.dobAd.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "dob" })} type="text" id="personal_information-date_of_birth_ad" className="form-control" required />
+                    <DatePicker className="form-control custom-control englishDate" selected={state.dobAd.value} onChange={handleAdDate} />
                   </div>
+                  {state.dobAd.hasErrors && <p className="text-danger">{state.dobAd.message}</p>}
                 </div>
               </div>
             </div>
@@ -193,51 +349,55 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-gender">Gender*</label>
               <div className="input-group">
-                <select name="" id="personal_information-gender" className="form-control" required>
+                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "gender" })} name="" id="personal_information-gender" className="form-control" required>
                   <option value="">Select your gender</option>
                   <option value="1">Decline TO Answer</option>
                   <option value="2">Male</option>
                   <option value="3">Female</option>
                 </select>
               </div>
+              {state.gender.hasErrors && <p className="text-danger">{state.gender.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
-              <label htmlFor="personal_information-martial_status">Martial Status*</label>
+              <label htmlFor="personal_information-martial_status">Marital Status*</label>
               <div className="input-group">
-                <select name="" id="personal_information-martial_status" className="form-control">
+                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "maritalStatus" })} name="" id="personal_information-martial_status" className="form-control">
                   <option value="">Select your martial status</option>
                   <option value="1">Single</option>
                   <option value="2">Married</option>
                 </select>
               </div>
+              {state.maritalStatus.hasErrors && <p className="text-danger">{state.maritalStatus.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-account_type">Account Type*</label>
               <div className="input-group">
-                <select name="" id="personal_information-account_type" className="form-control" required>
+                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "accountType" })} name="" id="personal_information-account_type" className="form-control" required>
                   <option value="">Select your account type</option>
                   <option value="1">Nepalese</option>
                   <option value="2">NRN - Non Residental Nepali</option>
                   <option value="3">Foreign</option>
                 </select>
               </div>
+              {state.accountType.hasErrors && <p className="text-danger">{state.accountType.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-nationality">Nationality*</label>
               <div className="input-group">
-                <select name="" id="personal_information-nationality" className="form-control" required>
+                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "nationality" })} name="" id="personal_information-nationality" className="form-control" required>
                   <option value="">Select Nationality</option>
                   <option value="1">Nepalese</option>
                   <option value="2">NRN - Non Residental Nepali</option>
                   <option value="3">Foreign</option>
                 </select>
               </div>
+              {state.nationality.hasErrors && <p className="text-danger">{state.nationality.message}</p>}
             </div>
           </div>
           <div className="col-md-4"></div>
@@ -246,25 +406,27 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-type_of_identity_card">Type of Identitiy card*</label>
               <div className="input-group">
-                <select name="" id="personal_information-type_of_identity_card" className="form-control" required>
+                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "typeOfId" })} name="" id="personal_information-type_of_identity_card" className="form-control" required>
                   <option value="">Choose your type of ID</option>
                   <option value="1">Citizenship</option>
                 </select>
               </div>
+              {state.typeOfId.hasErrors && <p className="text-danger">{state.typeOfId.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-identification_number">Identification Number*</label>
               <div className="input-group">
-                <input type="text" id="personal_information-identification_number" className="form-control" />
+                <input onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idNo" })} type="text" id="personal_information-identification_number" className="form-control" />
               </div>
+              {state.typeOfId.hasErrors && <p className="text-danger">{state.typeOfId.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-id_issued_district">ID Issued District*</label>
-              <select name="" id="personal_information-id_issued_district" className="form-control" required>
+              <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idIssueDistrict" })} name="" id="personal_information-id_issued_district" className="form-control" required>
                 {districts.map((item, i) => {
                   return (
                     <option key={i} value={item.name}>
@@ -275,35 +437,44 @@ function PersonalInfo() {
                 })}
               </select>
             </div>
+            {state.idIssueDistrict.hasErrors && <p className="text-danger">{state.idIssueDistrict.message}</p>}
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-id_issue_date_bs">ID issue Date(B.S)*</label>
               <div className="input-group">
-                <input type="text" id="personal_information-id_issue_date_bs" className="form-control" required />
+                <input value={state.idIssueDateBs.value} type="text" id="personal_information-id_issue_date_bs" className="form-control" required />
+                <Calendar className="form-control" value={state.idIssueDateBs.value} onChange={handleIdIssueDateBs} theme="deepdark" />
               </div>
+              {state.idIssueDateBs.hasErrors && <p className="text-danger">{state.idIssueDateBs.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-id_issued_date_ad">ID Issue Date(A.D)*</label>
               <div className="input-group">
-                <input type="text" id="personal_information-id_issued_date_ad" className="form-control" required />
+                <input value={state.idIssueDate.value} type="text" id="personal_information-id_issued_date_ad" className="form-control" required />
+                <DatePicker className="form-control" selected={state.idIssueDate.value} onChange={handleIdIssueDate} />
               </div>
+              {state.idIssueDate.hasErrors && <p className="text-danger">{state.idIssueDate.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-pan">Permanent Account Number(PAN)</label>
               <div className="input-group">
-                <input type="text" id="personal_information-pan" className="form-control" />
+                <input onBlur={(e) => dispatch({ type: "validatePAN", value: e.target.value })} value={state.pan.value} onChange={(e) => dispatch({ type: "panChange", value: e.target.value, field: "pan" })} type="number" id="personal_information-pan" className="form-control" />
               </div>
+              {state.pan.hasErrors && <p className="text-danger">{state.pan.message}</p>}
+              {state.pan.checkingNow && <p className="text-danger">{state.pan.message}</p>}
             </div>
           </div>
         </div>
       </div>
       <div className="card-footer ">
-        <span className="btn btn-primary">Submit</span>
+        <span className="btn btn-primary" onClick={handleSubmit}>
+          Submit
+        </span>
       </div>
     </div>
   )
