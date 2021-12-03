@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import Calendar from "@sbmdkl/nepali-datepicker-reactjs"
@@ -7,24 +7,16 @@ import adbs from "ad-bs-converter"
 import districts from "../../Assets/district-list-nepal"
 import { useImmerReducer } from "use-immer"
 import axios from "axios"
+//CONTEXTS
+import FormState from "./FormState"
+import FormDispatch from "./FormDispatch"
+
 function PersonalInfo() {
+  const formState = useContext(FormState)
+  const formDispatch = useContext(FormDispatch)
   const initialState = {
     fullName: {
       name: "fullName",
-      value: "",
-      hasErrors: false,
-      message: "",
-      touched: false,
-    },
-    mobile: {
-      name: "mobile",
-      value: "",
-      hasErrors: false,
-      message: "",
-      touched: false,
-    },
-    email: {
-      name: "email",
       value: "",
       hasErrors: false,
       message: "",
@@ -116,37 +108,38 @@ function PersonalInfo() {
       checkCount: 0,
       checkingNow: false,
     },
+    checkCount: {
+      counter: 0,
+      hasErrors: false,
+      touched: true,
+    },
   }
   function ourReducer(draft, action) {
     switch (action.type) {
-      // case "inputChange":
-      //   for (const key in draft) {
-      //     if (draft[key].name == action.field) {
-      //       // console.log(action.field, "fullname")
-
-      //       if (action.value.trim() == "") {
-      //         draft[key].hasErrors = true
-      //         draft[key].message = `This field cannot be blank`
-      //         return
-      //       }
-      //       draft[key].value = action.value
-      //     }
-      //   }
-      //   return
-      // case "inputBlur":
-      //   console.log("this reducer hit")
-      //   for (const key in draft) {
-      //     if (draft[key].name == action.field) {
-      //       console.log("action.value", action.value)
-      //       if (action.value.trim() == "") {
-      //         draft[key].hasErrors = true
-      //         draft[key].message = `This field cannot be blank`
-      //         return
-      //       }
-      //       draft[key].value = action.value
-      //     }
-      //   }
-      //   return
+      case "inputChange":
+        for (const key in draft) {
+          if (draft[key].name == action.field) {
+            // console.log(action.field, "fullname")
+            draft[key].hasErrors = false
+            draft[key].touched = true
+            draft[key].value = action.value
+          }
+        }
+        return
+      case "inputBlur":
+        console.log("this reducer hit")
+        for (const key in draft) {
+          if (draft[key].name == action.field) {
+            console.log("action.value", action.value)
+            if (action.value.trim() == "") {
+              draft[key].hasErrors = true
+              draft[key].message = `This field cannot be blank`
+              return
+            }
+            draft[key].value = action.value
+          }
+        }
+        return
       case "fullNameChange":
         draft.fullName.touched = true
         if (action.value.length > 50) {
@@ -163,21 +156,10 @@ function PersonalInfo() {
           draft.fullName.message = "Full name must be alteast 3 chaacter's long"
         }
         return
-      case "mobileChange":
-        draft.mobile.touched = true
-        draft.mobile.hasErrors = false
-        draft.mobile.value = action.value
-        return
-      case "validateMobile":
-        if (action.value.length !== 10) {
-          draft.mobile.hasErrors = true
-          draft.mobile.message = "Mobile number must be 10 digits"
-        }
-        return
-      case "emailChange":
-        draft.email.touched = true
-        draft.email.hasErrors = false
-        draft.email.value = action.value
+      case "dobBsChange":
+        draft.dobBs.touched = true
+        draft.dobBs.hasErrors = false
+        draft.dobBs.value = action.value
         return
       case "dobAdChange":
         console.log("dobadchanged reducer hit")
@@ -187,10 +169,12 @@ function PersonalInfo() {
         return
       case "idIssueDateChange":
         console.log("id issue date change reducer hit")
-        draft.idIssueDate.has = false
+        draft.idIssueDate.touched = true
+        draft.idIssueDate.hasErrors = false
         draft.idIssueDate.value = action.value
         return
       case "panChange":
+        draft.pan.touched = true
         draft.pan.hasErrors = false
         draft.pan.value = action.value
         return
@@ -218,15 +202,24 @@ function PersonalInfo() {
         return
       case "checkForErrors":
         console.log("checking for errors")
+        var errorCount = 0
+        var unTouchedCount = 0
         for (const key in draft) {
           var touchedCount
-          var unTouchedCount
-          var errorCount
 
           if (!draft[key].touched) {
             draft[key].hasErrors = true
             draft[key].message = "you must fill this field to navigate to the another step"
+            unTouchedCount++
+            // console.log("untouchedcount", unTouchedCount)
           }
+          if (draft[key].hasErrors) {
+            errorCount++
+          }
+        }
+        console.log("ready to submit", errorCount)
+        if (errorCount == 0) {
+          draft.checkCount.counter++
         }
       case "default":
         return
@@ -236,7 +229,7 @@ function PersonalInfo() {
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
   const handleDate = ({ bsDate, adDate }) => {
-    dispatch({ type: "inputChange", value: bsDate, field: "dobBs" })
+    dispatch({ type: "dobBsChange", value: bsDate, field: "dobBs" })
     dispatch({ type: "dobAdChange", value: new Date(adDate), field: "dobAd" })
   }
 
@@ -259,6 +252,7 @@ function PersonalInfo() {
   }
   useEffect(() => {
     console.log("hello from the personal info")
+    console.log()
     for (const key in state) {
       // console.log(`${key}: ${state[key]}`)
       var arr = state[key]
@@ -307,18 +301,16 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-mobile">Mobile*</label>
               <div className="input-group">
-                <input onBlur={(e) => dispatch({ type: "validateMobile", value: e.target.value, field: "mobile" })} onChange={(e) => dispatch({ type: "mobileChange", value: e.target.value, field: "mobile" })} type="number" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
+                <input readOnly value={formState.customers.mobile} type="number" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
               </div>
-              {state.mobile.hasErrors && <p className="text-danger">{state.mobile.message}</p>}
             </div>
           </div>
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-email">Email*</label>
               <div className="input-group">
-                <input onChange={(e) => dispatch({ type: "emailChange", value: e.target.value, field: "email" })} type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
+                <input readOnly value={formState.customers.email} type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
               </div>
-              {state.email.hasErrors && <p className="text-danger">{state.email.message}</p>}
             </div>
           </div>
           <div className="col-md-4">

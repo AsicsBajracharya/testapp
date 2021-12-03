@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from "react"
 import { withRouter } from "react-router"
 import axios from "axios"
-import StateContext from "../../StateContext"
+//CONTEXTS
+import FormState from "./FormState"
+import FormDispatch from "./FormDispatch"
 function Verification(props) {
-  const appState = useContext(StateContext)
+  const formState = useContext(FormState)
+  const formDispatch = useContext(FormDispatch)
+
   const [otp, setOtp] = useState(0)
   const [checkCount, setCheckCount] = useState(0)
   const [error, setError] = useState("")
@@ -19,20 +23,22 @@ function Verification(props) {
   }
 
   useEffect(() => {
+    console.log("uniqueid", formState.uniqueId)
     console.log(checkCount, "from the useEffect")
     const ourRequest = axios.CancelToken.source()
     if (checkCount >= 1) {
+      console.log("verify otp")
       async function register() {
         try {
-          const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: appState.user.uniqueId, otp: 123456 }, { cancelToken: ourRequest.token })
-          console.log("registration form submitted")
-          console.log(response.data.data.uniqueId)
-          console.log(response.data)
-          // appDispatch({ type: "otpSend", value: response.data.data.uniqueId })
-          props.history.push("/customers/register/login")
-        } catch (e) {
-          console.log(e, "there was an error")
+          const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: formState.uniqueId, otp: 123455 }, { cancelToken: ourRequest.token })
+          console.log(response)
+          if (response.data.success) {
+            props.history.push("/customers/register/login")
+            return
+          }
           setError("Invalid Otp")
+        } catch (e) {
+          console.log(e.response, "there was an error")
         }
       }
       register()
@@ -50,7 +56,9 @@ function Verification(props) {
         </div>
         <div className="card-body">
           <div className="mobile-number">
-            <h4>Example number 98019247439</h4>
+            <h4>
+              Otp has been sent to {formState.customers.mobile} and {formState.customers.email}
+            </h4>
           </div>
           <div className="input-wrapper">
             <label htmlFor="email">Email</label>
