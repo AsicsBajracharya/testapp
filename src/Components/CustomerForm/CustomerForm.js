@@ -57,7 +57,7 @@ function CustomerForm() {
           <Link to="/customers/register/verify">verify</Link>
           <Link to="/customers/register/login">login</Link>
           <Link to="/customers/register/dematForm/personalInfo">login</Link>
-          <Link to="/customers/register/dematForm/address">login</Link>
+          <Link to="/customers/register/address">address</Link>
         </div>
 
         <Switch>
