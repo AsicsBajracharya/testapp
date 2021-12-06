@@ -11,6 +11,9 @@ import Login from "./Login"
 import PersonalInfo from "./PersonalInfo"
 import ReadyDocuments from "./ReadyDocuments"
 import Address from "./Address"
+import FamilyInformation from "./FamilyInformation"
+import Documents from "./Documents"
+import Account from "./Account"
 function CustomerForm() {
   const originalState = {
     uniqueId: "",
@@ -23,6 +26,40 @@ function CustomerForm() {
       password: "",
       is_minor: "",
       nominee: "",
+    },
+    addresses: [
+      {
+        type: "",
+        block_number: "",
+        phone_number: "",
+        ward_number: "",
+        locality: "",
+        municipality: "",
+        district: "",
+        province: "",
+        country: "",
+      },
+      {
+        type: "",
+        block_number: "",
+        phone_number: "",
+        ward_number: "",
+        locality: "",
+        municipality: "",
+        district: "",
+        province: "",
+        country: "",
+      },
+    ],
+    families: {
+      father_name: "",
+      grand_father_name: "",
+      mother_name: "",
+      spouse: "",
+      son_name: "",
+      daughter_name: "",
+      father_in_law_name: "",
+      daughter_in_law_name: "",
     },
   }
   function ourReducer(draft, action) {
@@ -39,6 +76,12 @@ function CustomerForm() {
         return
       case "savePassword":
         draft.customers.password = action.value
+        return
+      case "saveAddress":
+        draft.addresses = action.value
+        return
+      case "saveFamily":
+        draft.families = action.value
         return
       case "default":
         return
@@ -79,6 +122,15 @@ function CustomerForm() {
             </Route>
             <Route path="/customers/register/address">
               <Address />
+            </Route>
+            <Route path="/customers/register/familyInformation">
+              <FamilyInformation />
+            </Route>
+            <Route path="/customers/register/account">
+              <Account />
+            </Route>
+            <Route path="/customers/register/documents">
+              <Documents />
             </Route>
           </form>
         </Switch>

@@ -1,39 +1,42 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
+import { Link, withRouter } from "react-router-dom"
 import districts from "../../Assets/district-list-nepal"
 import provinceData from "../../Assets/province-district.json"
 import { useImmerReducer } from "use-immer"
+import FormDispatch from "./FormDispatch"
 
-function Address() {
+function Address(props) {
+  const formDispatch = useContext(FormDispatch)
   const [savecount, setSaveCount] = useState(0)
   const intitalState = {
     temporary: {
       // type: "1",
       block_number: {
-        value: "00",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       phone_number: {
-        value: "9841097667",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       ward_number: {
-        value: "3",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       locality: {
-        value: "Khadbari",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       municipality: {
-        value: "Kathmandu",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
@@ -46,21 +49,21 @@ function Address() {
       },
       district: {
         touched: false,
-        value: "Kathmandu",
+        value: "",
         hasErrors: false,
         message: "",
         list: [],
         listToShow: [],
       },
       province: {
-        value: "3",
+        value: "",
         hasErrors: false,
         message: "",
         list: [],
         touched: false,
       },
       country: {
-        value: "Nepal",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
@@ -69,31 +72,31 @@ function Address() {
     permanent: {
       // type: "2",
       block_number: {
-        value: "00",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       phone_number: {
-        value: "9841097667",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       ward_number: {
-        value: "3",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       locality: {
-        value: "Khadbari",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
       },
       municipality: {
-        value: "Kathmandu",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
@@ -105,7 +108,7 @@ function Address() {
         touched: false,
       },
       district: {
-        value: "Kathmandu",
+        value: "",
         hasErrors: false,
         message: "",
         list: [],
@@ -113,14 +116,14 @@ function Address() {
         touched: false,
       },
       province: {
-        value: "3",
+        value: "",
         hasErrors: false,
         message: "",
         list: [],
         touched: false,
       },
       country: {
-        value: "Nepal",
+        value: "",
         hasErrors: false,
         message: "",
         touched: false,
@@ -282,14 +285,32 @@ function Address() {
         return
       case "sameAsCurrent":
         draft.permanent.country.value = draft.temporary.country.value
+        draft.permanent.country.touched = true
         draft.permanent.province.value = draft.temporary.province.value
+        draft.permanent.province.touched = true
         draft.permanent.district.value = draft.temporary.district.value
+        draft.permanent.district.touched = true
         draft.permanent.municipality.value = draft.temporary.municipality.value
+        draft.permanent.municipality.touched = true
         draft.permanent.city.value = draft.temporary.city.value
+        draft.permanent.city.touched = true
         draft.permanent.locality.value = draft.temporary.locality.value
+        draft.permanent.locality.touched = true
         draft.permanent.ward_number.value = draft.temporary.ward_number.value
+        draft.permanent.ward_number.touched = true
         draft.permanent.block_number.value = draft.temporary.block_number.value
+        draft.permanent.block_number.touched = true
         draft.permanent.phone_number.value = draft.temporary.phone_number.value
+        draft.permanent.phone_number.touched = true
+        draft.permanent.country.hasErrors = false
+        draft.permanent.province.hasErrors = false
+        draft.permanent.district.hasErrors = false
+        draft.permanent.municipality.hasErrors = false
+        draft.permanent.city.hasErrors = false
+        draft.permanent.locality.hasErrors = false
+        draft.permanent.ward_number.hasErrors = false
+        draft.permanent.block_number.hasErrors = false
+        draft.permanent.phone_number.hasErrors = false
         return
       case "differentFromCurrent":
         draft.permanent.country.value = ""
@@ -301,12 +322,21 @@ function Address() {
         draft.permanent.ward_number.value = ""
         draft.permanent.block_number.value = ""
         draft.permanent.phone_number.value = ""
+        draft.permanent.country.touched = false
+        draft.permanent.province.touched = false
+        draft.permanent.district.touched = false
+        draft.permanent.municipality.touched = false
+        draft.permanent.city.touched = false
+        draft.permanent.locality.touched = false
+        draft.permanent.ward_number.touched = false
+        draft.permanent.block_number.touched = false
+        draft.permanent.phone_number.touched = false
         return
       case "validationRules":
         let errorCount = 0
         for (const key in draft) {
           for (const key2 in draft[key]) {
-            if (!draft[key][key2].touched) {
+            if (!draft[key][key2].touched || draft[key][key2].value == "") {
               // console.log(draft[key][key2])
               draft[key][key2].hasErrors = true
               draft[key][key2].message = "you must fill in this field to navigate to the other step"
@@ -343,6 +373,43 @@ function Address() {
     dispatch({ type: "renderProvinces" })
     dispatch({ type: "renderDistricts" })
   }, [])
+  useEffect(() => {
+    console.log("save count form the useeffect", savecount)
+    console.log("save the the state and navigate to another page")
+    if (savecount) {
+      console.log("there is a savecount")
+      formDispatch({
+        type: "saveAddress",
+        value: [
+          {
+            type: "1",
+            block_number: state.temporary.block_number.value,
+            phone_number: state.temporary.phone_number.value,
+            ward_number: state.temporary.ward_number.value,
+            locality: state.temporary.locality.value,
+            municipality: state.temporary.municipality.value,
+            district: state.temporary.district.value,
+            province: state.temporary.province.value,
+            country: state.temporary.country.value,
+          },
+          {
+            type: "2",
+            block_number: state.permanent.block_number.value,
+            phone_number: state.permanent.phone_number.value,
+            ward_number: state.permanent.ward_number.value,
+            locality: state.permanent.locality.value,
+            municipality: state.permanent.municipality.value,
+            district: state.permanent.district.value,
+            province: state.permanent.province.value,
+            country: state.permanent.country.value,
+          },
+        ],
+      })
+      props.history.push("/customers/register/familyInformation")
+    }
+
+    // console.log(Object.values(state))
+  }, [savecount])
 
   function handleCheck(e) {
     console.log("value of the checkbox", e.target.checked)
@@ -572,4 +639,4 @@ function Address() {
   )
 }
 
-export default Address
+export default withRouter(Address)
