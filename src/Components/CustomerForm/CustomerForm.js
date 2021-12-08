@@ -12,7 +12,7 @@ import PersonalInfo from "./PersonalInfo"
 import ReadyDocuments from "./ReadyDocuments"
 import Address from "./Address"
 import FamilyInformation from "./FamilyInformation"
-import Documents from "./Documents"
+import Documents from "./Documents-backup"
 import Account from "./Account"
 function CustomerForm() {
   const originalState = {

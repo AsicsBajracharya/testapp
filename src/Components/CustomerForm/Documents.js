@@ -1,87 +1,80 @@
 import React, { useEffect, useRef, useState } from "react"
-import Button from "@material-ui/core/Button"
 import Cropper from "react-easy-crop"
-import Slider from "@material-ui/core/Slider"
 import getCroppedImg from "./CropImage"
+
 function Documents() {
-  const inputRef = useRef()
-  const triggerPopup = () => inputRef.current.click()
-  const [image, setImage] = useState(null)
-  const [croppedArea, setCroppedArea] = useState(null)
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = useState()
-  const [currentImage, setCurrentImage] = useState(null)
-
-  function cancelSelection(e) {
-    setImage(null)
-    setCurrentImage(null)
-  }
-
-  //my code
+  //refs
+  const displayPictureRef = useRef()
   const [displayPicture, setDisplayPicture] = useState(null)
+  const [displayPictureCrop, setDisplayPictureCrop] = useState({ x: 0, y: 0 })
+  const [displayPictureCroppedArea, setDisplayPictureCroppedArea] = useState(null)
+  const [displayPictureZoom, setDisplayPictureZoom] = useState()
+  const [currentPicture, setCurrentPicture] = useState(null)
 
-  const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
-    setCroppedArea(croppedAreaPixels)
-  }
-  const onSelectFile = (e) => {
+  function displayPictureSelect(e) {
+    console.log("display picture sleected")
     if (e.target.files && e.target.files.length > 0) {
       console.log("there is a file")
       const reader = new FileReader()
       reader.readAsDataURL(e.target.files[0])
       reader.addEventListener("load", () => {
-        setImage(reader.result)
-        setCurrentImage(reader.result)
+        setDisplayPicture(reader.result)
+        setCurrentPicture(reader.result)
       })
     }
   }
-  async function onCrop(e) {
+  function triggerPopup() {
+    displayPictureRef.current.click()
+  }
+
+  function onDisplayPictureCropComplete(croppedAreaPercentage, croppedAreaPixels) {
+    setDisplayPictureCroppedArea(croppedAreaPixels)
+  }
+  async function onDisplayPictureCrop() {
     try {
-      const croppedImageUrl = await getCroppedImg(image, croppedArea)
-      console.log("croppedimageurl", croppedImageUrl)
-      setImage(croppedImageUrl)
-      setCurrentImage(null)
+      const croppedImageUrl = await getCroppedImg(displayPicture, displayPictureCroppedArea)
+      setDisplayPicture(croppedImageUrl)
+      setCurrentPicture(null)
     } catch (e) {
-      console.log(e, "there was an error while getting the cropped image")
+      console.log(e, "there was an error")
     }
   }
+  function onDisplayPictureCancel() {
+    setCurrentPicture(null)
+    setDisplayPicture(null)
+  }
   return (
-    <div className="card">
-      <input type="file" id="document-pp_size_photo" accept="image/*" className="form-control" ref={inputRef} onChange={onSelectFile} />
-      <div className="image-container image-person">
-        <img src={image} alt="" />
-      </div>
-
-      {/* <div className="container-cropper">
-        <Cropper image={image} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} />
-        <Slider />
-      </div> */}
-      <div className="container-buttons">
-        <Button variant="contained" color="primary" onClick={triggerPopup}>
-          choose
-        </Button>
-        <Button variant="contained" color="secondary">
-          download
-        </Button>
-      </div>
-
-      {currentImage ? (
-        <div className="container-cropper">
-          <div className="overlay">
-            <Cropper image={image} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} />
+    <>
+      <div className="container">
+        <div className="card">
+          <div className="card-header">
+            <h3>Upload Your documents</h3>
           </div>
-          <div className="btn-container">
-            <span className="btn btn-success" onClick={onCrop}>
-              crop
-            </span>
-            <span className="btn btn-danger" onClick={cancelSelection}>
-              cancel
-            </span>
+          <div className="card-body">
+            <input type="file" className="form-control" ref={displayPictureRef} onChange={displayPictureSelect}></input>
+            <div className="image-preview display-picture">{displayPicture && <img src={displayPicture} alt="" />}</div>
+            <div className="button-group">
+              <div className="btn-container">
+                <button onClick={triggerPopup}>upload</button>
+                <button>Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div className="card-footer"></div>
+        </div>
+      </div>
+      {currentPicture && (
+        <div className="cropper-container">
+          <div className="overlay">
+            <Cropper image={currentPicture} crop={displayPictureCrop} zoom={displayPictureZoom} onCropChange={setDisplayPictureCrop} onZoomChange={setDisplayPictureZoom} onCropComplete={onDisplayPictureCropComplete} />
+          </div>
+          <div className="button-container">
+            <button onClick={onDisplayPictureCrop}>Crop</button>
+            <button onClick={onDisplayPictureCancel}>Cancel</button>
           </div>
         </div>
-      ) : (
-        ""
       )}
-    </div>
+    </>
   )
 }
 
