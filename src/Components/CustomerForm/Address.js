@@ -632,6 +632,9 @@ function Address(props) {
             <span className="btn btn-primary" onClick={handleSubmit}>
               next
             </span>
+            <Link className="btn btn-info" to="/customers/register/personalInfo">
+              Previous
+            </Link>
           </div>
         </div>
       </div>

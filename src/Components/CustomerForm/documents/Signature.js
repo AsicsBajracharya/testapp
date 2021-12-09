@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button"
 import Cropper from "react-easy-crop"
 import Slider from "@material-ui/core/Slider"
 import getCroppedImg from "../CropImage"
-function Signature() {
+function Signature(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
   const [image, setImage] = useState(null)
@@ -40,6 +40,8 @@ function Signature() {
       console.log("croppedimageurl", croppedImageUrl)
       setImage(croppedImageUrl)
       setCurrentImage(null)
+      props.setSignature(image)
+      props.setErrors(null)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

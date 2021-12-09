@@ -3,7 +3,8 @@ import Button from "@material-ui/core/Button"
 import Cropper from "react-easy-crop"
 import Slider from "@material-ui/core/Slider"
 import getCroppedImg from "../CropImage"
-function CitizenshipBack() {
+import { defaultProps } from "@sbmdkl/nepali-datepicker-reactjs"
+function CitizenshipBack(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
   const [image, setImage] = useState(null)
@@ -40,6 +41,7 @@ function CitizenshipBack() {
       console.log("croppedimageurl", croppedImageUrl)
       setImage(croppedImageUrl)
       setCurrentImage(null)
+      props.setCitizenshipBack(image)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

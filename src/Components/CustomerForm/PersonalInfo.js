@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
+import { withRouter } from "react-router"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import Calendar from "@sbmdkl/nepali-datepicker-reactjs"
@@ -11,13 +12,13 @@ import axios from "axios"
 import FormState from "./FormState"
 import FormDispatch from "./FormDispatch"
 
-function PersonalInfo() {
+function PersonalInfo(props) {
   const formState = useContext(FormState)
   const formDispatch = useContext(FormDispatch)
   const initialState = {
     fullName: {
       name: "fullName",
-      value: "",
+      value: formState.customers.full_name,
       hasErrors: false,
       message: "",
       touched: false,
@@ -35,17 +36,18 @@ function PersonalInfo() {
       hasErrors: false,
       message: "",
       touched: false,
+      dobFormatted: "",
     },
     gender: {
       name: "gender",
-      value: "",
+      value: formState.personal_informations.gender,
       hasErrors: false,
       message: "",
       touched: false,
     },
     maritalStatus: {
       name: "maritalStatus",
-      value: "",
+      value: formState.personal_informations.marital_status,
       hasErrors: false,
       message: "",
       touched: false,
@@ -59,28 +61,28 @@ function PersonalInfo() {
     },
     nationality: {
       name: "nationality",
-      value: "",
+      value: formState.personal_informations.nationality,
       hasErrors: false,
       message: "",
       touched: false,
     },
     typeOfId: {
       name: "typeOfId",
-      value: "",
+      value: formState.personal_informations.identity_card_type,
       hasErrors: false,
       message: "",
       touched: false,
     },
     idNo: {
       name: "idNo",
-      value: "",
+      value: formState.personal_informations.identity_card_number,
       hasErrors: false,
       message: "",
       touched: false,
     },
     idIssueDistrict: {
       name: "idIssueDistrict",
-      value: "",
+      value: formState.personal_informations.identity_card_issue_district,
       hasErrors: false,
       message: "",
       touched: false,
@@ -98,10 +100,11 @@ function PersonalInfo() {
       hasErrors: false,
       message: "",
       touched: false,
+      dateFormatted: "",
     },
     pan: {
       name: "pan",
-      value: "",
+      value: formState.personal_informations.pan_number,
       hasErrors: false,
       message: "",
       touched: false,
@@ -109,6 +112,11 @@ function PersonalInfo() {
       checkingNow: false,
     },
     checkCount: {
+      counter: 0,
+      hasErrors: false,
+      touched: true,
+    },
+    submitCount: {
       counter: 0,
       hasErrors: false,
       touched: true,
@@ -166,12 +174,14 @@ function PersonalInfo() {
         draft.dobAd.touched = true
         draft.dobAd.hasErrors = false
         draft.dobAd.value = action.value
+        draft.dobAd.dobFormatted = formatDate(action.value)
         return
       case "idIssueDateChange":
         console.log("id issue date change reducer hit")
         draft.idIssueDate.touched = true
         draft.idIssueDate.hasErrors = false
         draft.idIssueDate.value = action.value
+        draft.idIssueDate.dateFormatted = formatDate(action.value)
         return
       case "panChange":
         draft.pan.touched = true
@@ -219,7 +229,7 @@ function PersonalInfo() {
         }
         console.log("ready to submit", errorCount)
         if (errorCount == 0) {
-          draft.checkCount.counter++
+          draft.submitCount.counter++
         }
       case "default":
         return
@@ -280,9 +290,49 @@ function PersonalInfo() {
 
     return () => ourRequest.cancel()
   }, [state.pan.checkCount])
+  useEffect(() => {
+    if (state.submitCount.counter) {
+      console.log("ready to submit the personal form")
+      formDispatch({
+        type: "savePersonalInfo",
+        value: {
+          dob: state.dobAd.dobFormatted,
+          gender: state.gender.value,
+          marital_status: state.maritalStatus.value,
+          nationality: state.nationality.value,
+          pan_number: state.pan.value,
+          identity_card_type: state.typeOfId.value,
+          identity_card_number: state.idNo.value,
+          identity_card_issue_district: state.idIssueDistrict.value,
+          identity_card_issue_date: state.idIssueDate.dateFormatted,
+        },
+      })
+      formDispatch({ type: "saveFullName", value: state.fullName.value })
+      props.history.push("/customers/register/address")
+    }
+  }, [state.submitCount.counter])
 
   function handleSubmit() {
     dispatch({ type: "checkForErrors" })
+  }
+
+  function formatDate(dateAd) {
+    let preFormattedAte = new Date(dateAd)
+    let year = preFormattedAte.getFullYear()
+    let month = ""
+    let date = ""
+    console.log(preFormattedAte.getMonth() + 1)
+    if (parseInt(preFormattedAte.getMonth() + 1) < 10) {
+      month = `0${preFormattedAte.getMonth() + 1}`
+    } else {
+      month = preFormattedAte.getMonth() + 1
+    }
+    if (parseInt(preFormattedAte.getDate()) < 10) {
+      date = `0${preFormattedAte.getDate()}`
+    } else {
+      date = preFormattedAte.getDate()
+    }
+    return `${year}-${month}-${date}`
   }
   return (
     <div className="card">
@@ -292,7 +342,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-full_name">Full Name*</label>
               <div className="input-group">
-                <input onBlur={(e) => dispatch({ type: "validateFullName", value: e.target.value, field: "fullName" })} onChange={(e) => dispatch({ type: "fullNameChange", value: e.target.value, field: "fullName" })} type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
+                <input value={state.fullName.value} onBlur={(e) => dispatch({ type: "validateFullName", value: e.target.value, field: "fullName" })} onChange={(e) => dispatch({ type: "fullNameChange", value: e.target.value, field: "fullName" })} type="text" id="personal_information-full_name" className="form-control" placeholder="Your Full Name" required />
               </div>
               {state.fullName.hasErrors && <p className="text-danger">{state.fullName.message}</p>}
             </div>
@@ -319,7 +369,7 @@ function PersonalInfo() {
                 <div className="input-wrapper">
                   <label htmlFor="personal_information-date_of_birth_bs">Date of Birth (B.S.)*</label>
                   <div className="input-group">
-                    <input type="text" value={state.dobBs.value} id="personal_information-date_of_birth_bs" className="form-control" required />
+                    <input value={state.dobBs.value} type="text" value={state.dobBs.value} id="personal_information-date_of_birth_bs" className="form-control" required />
                     <Calendar className="form-control custom-control nepaliDate" value={state.dobBs.value} onChange={handleDate} theme="deepdark" />
                   </div>
                   {state.dobBs.hasErrors && <p className="text-danger">{state.dobBs.message}</p>}
@@ -341,7 +391,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-gender">Gender*</label>
               <div className="input-group">
-                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "gender" })} name="" id="personal_information-gender" className="form-control" required>
+                <select value={state.gender.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "gender" })} name="" id="personal_information-gender" className="form-control" required>
                   <option value="">Select your gender</option>
                   <option value="1">Decline TO Answer</option>
                   <option value="2">Male</option>
@@ -355,7 +405,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-martial_status">Marital Status*</label>
               <div className="input-group">
-                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "maritalStatus" })} name="" id="personal_information-martial_status" className="form-control">
+                <select value={state.maritalStatus.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "maritalStatus" })} name="" id="personal_information-martial_status" className="form-control">
                   <option value="">Select your martial status</option>
                   <option value="1">Single</option>
                   <option value="2">Married</option>
@@ -368,7 +418,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-account_type">Account Type*</label>
               <div className="input-group">
-                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "accountType" })} name="" id="personal_information-account_type" className="form-control" required>
+                <select value={state.accountType.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "accountType" })} name="" id="personal_information-account_type" className="form-control" required>
                   <option value="">Select your account type</option>
                   <option value="1">Nepalese</option>
                   <option value="2">NRN - Non Residental Nepali</option>
@@ -382,7 +432,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-nationality">Nationality*</label>
               <div className="input-group">
-                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "nationality" })} name="" id="personal_information-nationality" className="form-control" required>
+                <select value={state.nationality.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "nationality" })} name="" id="personal_information-nationality" className="form-control" required>
                   <option value="">Select Nationality</option>
                   <option value="1">Nepalese</option>
                   <option value="2">NRN - Non Residental Nepali</option>
@@ -398,7 +448,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-type_of_identity_card">Type of Identitiy card*</label>
               <div className="input-group">
-                <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "typeOfId" })} name="" id="personal_information-type_of_identity_card" className="form-control" required>
+                <select value={state.typeOfId.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "typeOfId" })} name="" id="personal_information-type_of_identity_card" className="form-control" required>
                   <option value="">Choose your type of ID</option>
                   <option value="1">Citizenship</option>
                 </select>
@@ -410,7 +460,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-identification_number">Identification Number*</label>
               <div className="input-group">
-                <input onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idNo" })} type="text" id="personal_information-identification_number" className="form-control" />
+                <input value={state.idNo.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idNo" })} type="number" id="personal_information-identification_number" className="form-control" />
               </div>
               {state.typeOfId.hasErrors && <p className="text-danger">{state.typeOfId.message}</p>}
             </div>
@@ -418,7 +468,7 @@ function PersonalInfo() {
           <div className="col-md-4">
             <div className="input-wrapper">
               <label htmlFor="personal_information-id_issued_district">ID Issued District*</label>
-              <select onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idIssueDistrict" })} name="" id="personal_information-id_issued_district" className="form-control" required>
+              <select value={state.idIssueDistrict.value} onChange={(e) => dispatch({ type: "inputChange", value: e.target.value, field: "idIssueDistrict" })} name="" id="personal_information-id_issued_district" className="form-control" required>
                 {districts.map((item, i) => {
                   return (
                     <option key={i} value={item.name}>
@@ -455,7 +505,7 @@ function PersonalInfo() {
             <div className="input-wrapper">
               <label htmlFor="personal_information-pan">Permanent Account Number(PAN)</label>
               <div className="input-group">
-                <input onBlur={(e) => dispatch({ type: "validatePAN", value: e.target.value })} value={state.pan.value} onChange={(e) => dispatch({ type: "panChange", value: e.target.value, field: "pan" })} type="number" id="personal_information-pan" className="form-control" />
+                <input value={state.pan.value} onBlur={(e) => dispatch({ type: "validatePAN", value: e.target.value })} value={state.pan.value} onChange={(e) => dispatch({ type: "panChange", value: e.target.value, field: "pan" })} type="number" id="personal_information-pan" className="form-control" />
               </div>
               {state.pan.hasErrors && <p className="text-danger">{state.pan.message}</p>}
               {state.pan.checkingNow && <p className="text-danger">{state.pan.message}</p>}
@@ -472,4 +522,4 @@ function PersonalInfo() {
   )
 }
 
-export default PersonalInfo
+export default withRouter(PersonalInfo)

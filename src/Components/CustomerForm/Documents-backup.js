@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import DisplpayPicture from "./documents/DisplayPicture"
 import ThumbPrintLeft from "./documents/ThumbprintLeft"
 import ThumbprintRight from "./documents/ThumbprintRight"
 import CitizenshipBack from "./documents/CitizenshipBack"
 import CitizenshipFront from "./documents/CitizenshipFront"
 import Signature from "./documents/Signature"
+import FormDispatch from "./FormDispatch"
 
 function Documents() {
   const [displayPicture, setDisplayPicture] = useState(null)
@@ -12,10 +13,19 @@ function Documents() {
   const [thumbrpintRight, setThumbprintRight] = useState(null)
   const [citizenshipBack, setCitizenshipBack] = useState(null)
   const [citizenshipFront, setCitizenshipFront] = useState(null)
-  const [signature, setsignature] = useState(null)
+  const [signature, setSignature] = useState(null)
+  const [errors, setErros] = useState("")
+  const formDispatch = useContext(FormDispatch)
   function validateForm() {
     console.log("validate form")
+    console.log("display picture from the documents", displayPicture)
+    if (!displayPicture || !thumbrpintLeft || !thumbrpintRight || !citizenshipBack || !citizenshipFront || !signature) {
+      setErros("please upload all the documents")
+      return
+    }
+    // formDispatch({type: })
   }
+
   return (
     <div className="card">
       <div className="card-header">Upload your documents</div>
@@ -27,7 +37,7 @@ function Documents() {
                 <p className="lead">Your Profile Picture</p>
               </div>
               <div className="card-body">
-                <DisplpayPicture setDP={setDisplayPicture} />
+                <DisplpayPicture setDisplayPicture={setDisplayPicture} setErrors={setErros} />
               </div>
             </div>
           </div>
@@ -37,7 +47,7 @@ function Documents() {
                 <p className="lead">Your Thumbprint Left</p>
               </div>
               <div className="card-body">
-                <ThumbPrintLeft />
+                <ThumbPrintLeft setThumbprintLeft={setThumbprintLeft} setErrors={setErros} />
               </div>
             </div>
           </div>
@@ -47,7 +57,7 @@ function Documents() {
                 <p className="lead">Your Thumbprint Right</p>
               </div>
               <div className="card-body">
-                <ThumbprintRight />
+                <ThumbprintRight setThumbprintRight={setThumbprintRight} setErrors={setErros} />
               </div>
             </div>
           </div>
@@ -57,7 +67,7 @@ function Documents() {
                 <p className="lead">Your Citizenship card back</p>
               </div>
               <div className="card-body">
-                <CitizenshipBack />
+                <CitizenshipBack setCitizenshipBack={setCitizenshipBack} setErrors={setErros} />
               </div>
             </div>
           </div>
@@ -67,7 +77,7 @@ function Documents() {
                 <p className="lead">Your Citizenship card back</p>
               </div>
               <div className="card-body">
-                <CitizenshipFront />
+                <CitizenshipFront setCitizenshipFront={setCitizenshipFront} setErrors={setErros} />
               </div>
             </div>
           </div>
@@ -77,15 +87,16 @@ function Documents() {
                 <p className="lead">Your Signature</p>
               </div>
               <div className="card-body">
-                <Signature />
+                <Signature setSignature={setSignature} setErrors={setErros} />
               </div>
             </div>
           </div>
         </div>
+        {errors && <p className="text-danger">{errors}</p>}
       </div>
       <div className="card-footer">
-        <span className="btn btn-primary" onclick={validateForm}>
-          Next
+        <span className="btn btn-primary" onClick={validateForm}>
+          Next slide
         </span>
       </div>
     </div>

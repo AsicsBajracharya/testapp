@@ -27,6 +27,17 @@ function CustomerForm() {
       is_minor: "",
       nominee: "",
     },
+    personal_informations: {
+      dob: "",
+      gender: "",
+      marital_status: "",
+      nationality: "",
+      pan_number: null,
+      identity_card_type: "",
+      identity_card_number: "",
+      identity_card_issue_district: "",
+      identity_card_issue_date: "",
+    },
     addresses: [
       {
         type: "",
@@ -76,6 +87,12 @@ function CustomerForm() {
         return
       case "savePassword":
         draft.customers.password = action.value
+        return
+      case "savePersonalInfo":
+        draft.personal_informations = action.value
+        return
+      case "saveFullName":
+        draft.customers.full_name = action.value
         return
       case "saveAddress":
         draft.addresses = action.value

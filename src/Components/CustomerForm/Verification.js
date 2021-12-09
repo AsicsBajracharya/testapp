@@ -30,7 +30,7 @@ function Verification(props) {
       console.log("verify otp")
       async function register() {
         try {
-          const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: formState.uniqueId, otp: 123455 }, { cancelToken: ourRequest.token })
+          const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: formState.uniqueId, otp: otp }, { cancelToken: ourRequest.token })
           console.log(response)
           if (response.data.success) {
             props.history.push("/customers/register/login")

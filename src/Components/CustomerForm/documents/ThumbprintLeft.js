@@ -3,10 +3,11 @@ import Button from "@material-ui/core/Button"
 import Cropper from "react-easy-crop"
 import Slider from "@material-ui/core/Slider"
 import getCroppedImg from "../CropImage"
-function ThumbprintLeft() {
+function ThumbprintLeft(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
   const [image, setImage] = useState(null)
+  const [croppedImage, setCroppedImage] = useState(null)
   const [croppedArea, setCroppedArea] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState()
@@ -40,6 +41,9 @@ function ThumbprintLeft() {
       console.log("croppedimageurl", croppedImageUrl)
       setImage(croppedImageUrl)
       setCurrentImage(null)
+      console.log("hello cropping from the thumbprint left")
+      console.log(props)
+      props.setThumbprintLeft(image)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

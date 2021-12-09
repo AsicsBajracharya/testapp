@@ -3,10 +3,11 @@ import Button from "@material-ui/core/Button"
 import Cropper from "react-easy-crop"
 import Slider from "@material-ui/core/Slider"
 import getCroppedImg from "../CropImage"
-function DisplayPicture(setDP) {
+function DisplayPicture(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
   const [image, setImage] = useState(null)
+  const [croppedImage, setCroppedImage] = useState(null)
   const [croppedArea, setCroppedArea] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState()
@@ -16,6 +17,9 @@ function DisplayPicture(setDP) {
     setImage(null)
     setCurrentImage(null)
   }
+
+  //my code
+  const [displayPicture, setDisplayPicture] = useState(null)
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
     setCroppedArea(croppedAreaPixels)
@@ -27,7 +31,7 @@ function DisplayPicture(setDP) {
       reader.readAsDataURL(e.target.files[0])
       reader.addEventListener("load", () => {
         setImage(reader.result)
-        setCurrentImage(image)
+        setCurrentImage(reader.result)
       })
     }
   }
@@ -37,7 +41,9 @@ function DisplayPicture(setDP) {
       console.log("croppedimageurl", croppedImageUrl)
       setImage(croppedImageUrl)
       setCurrentImage(null)
-      setDP(true)
+      console.log("hello cropping from the thumbprint left")
+      console.log(props)
+      props.setDisplayPicture(image)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }
