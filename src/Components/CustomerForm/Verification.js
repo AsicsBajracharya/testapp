@@ -28,6 +28,7 @@ function Verification(props) {
     const ourRequest = axios.CancelToken.source()
     if (checkCount >= 1) {
       console.log("verify otp")
+      console.log(formState.uniqueId)
       async function register() {
         try {
           const response = await axios.post("http://127.0.0.1:8000/api/validateOTP", { uniqueId: formState.uniqueId, otp: otp }, { cancelToken: ourRequest.token })
@@ -57,7 +58,7 @@ function Verification(props) {
         <div className="card-body">
           <div className="mobile-number">
             <h4>
-              Otp has been sent to {formState.customers.mobile} and {formState.customers.email}
+              Otp has been sent to {formState.formData.customers.mobile} and {formState.formData.customers.email}
             </h4>
           </div>
           <div className="input-wrapper">

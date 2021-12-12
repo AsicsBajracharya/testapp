@@ -7,6 +7,7 @@ import { defaultProps } from "@sbmdkl/nepali-datepicker-reactjs"
 function CitizenshipBack(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
+  const [imageName, setImageIname] = useState(null)
   const [image, setImage] = useState(null)
   const [croppedArea, setCroppedArea] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -32,6 +33,7 @@ function CitizenshipBack(props) {
       reader.addEventListener("load", () => {
         setImage(reader.result)
         setCurrentImage(reader.result)
+        setImageIname(e.target.files[0].name)
       })
     }
   }
@@ -41,7 +43,8 @@ function CitizenshipBack(props) {
       console.log("croppedimageurl", croppedImageUrl)
       setImage(croppedImageUrl)
       setCurrentImage(null)
-      props.setCitizenshipBack(image)
+      // props.setCitizenshipBack(image)
+      props.setCitizenshipBack(imageName)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

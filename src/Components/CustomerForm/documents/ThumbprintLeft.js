@@ -6,6 +6,7 @@ import getCroppedImg from "../CropImage"
 function ThumbprintLeft(props) {
   const inputRef = useRef()
   const triggerPopup = () => inputRef.current.click()
+  const [imageName, setImageIname] = useState(null)
   const [image, setImage] = useState(null)
   const [croppedImage, setCroppedImage] = useState(null)
   const [croppedArea, setCroppedArea] = useState(null)
@@ -32,6 +33,7 @@ function ThumbprintLeft(props) {
       reader.addEventListener("load", () => {
         setImage(reader.result)
         setCurrentImage(reader.result)
+        setImageIname(e.target.files[0].name)
       })
     }
   }
@@ -43,7 +45,8 @@ function ThumbprintLeft(props) {
       setCurrentImage(null)
       console.log("hello cropping from the thumbprint left")
       console.log(props)
-      props.setThumbprintLeft(image)
+      // props.setThumbprintLeft(image)
+      props.setThumbprintLeft(imageName)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

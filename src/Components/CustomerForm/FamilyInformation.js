@@ -113,7 +113,7 @@ function FamilyInformation(props) {
           daughter_in_law_name: state.daughterInLawsName.value,
         },
       })
-      props.history.push("/customers/register/account")
+      props.history.push("/customers/register/occupation")
     }
   }, [saveCount])
 

@@ -1,8 +1,10 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { withRouter } from "react-router"
 import { useImmerReducer } from "use-immer"
 import BankData from "../../Assets/banks.json"
+import FormDispatch from "./FormDispatch"
 function Account(props) {
+  const formDispatch = useContext(FormDispatch)
   const initialState = {
     formData: {
       typeOfBank: {
@@ -115,9 +117,18 @@ function Account(props) {
   useEffect(() => {
     if (state.saveCount) {
       console.log("ready to save")
+      formDispatch({
+        type: "saveAccount",
+        value: {
+          bank_name: state.formData.bankName.value,
+          bank_code: "1101",
+          branch_name: state.formData.branch.value,
+          number: state.formData.accountNo.value,
+          type: state.formData.typeOfBank.value,
+        },
+      })
       props.history.push("/customers/register/documents")
     }
-    // dispatch({ type: "renderBanks" })
   }, [state.saveCount])
 
   function handleSubmit() {

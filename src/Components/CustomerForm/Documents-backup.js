@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
+import { withRouter } from "react-router"
 import DisplpayPicture from "./documents/DisplayPicture"
 import ThumbPrintLeft from "./documents/ThumbprintLeft"
 import ThumbprintRight from "./documents/ThumbprintRight"
@@ -7,7 +8,7 @@ import CitizenshipFront from "./documents/CitizenshipFront"
 import Signature from "./documents/Signature"
 import FormDispatch from "./FormDispatch"
 
-function Documents() {
+function Documents(props) {
   const [displayPicture, setDisplayPicture] = useState(null)
   const [thumbrpintLeft, setThumbprintLeft] = useState(null)
   const [thumbrpintRight, setThumbprintRight] = useState(null)
@@ -23,7 +24,21 @@ function Documents() {
       setErros("please upload all the documents")
       return
     }
-    // formDispatch({type: })
+    formDispatch({
+      type: "saveDocuments",
+      value: {
+        photo: displayPicture,
+        gov_issued_id_front: citizenshipFront,
+        gov_issued_id_back: citizenshipFront,
+        thumb_left: thumbrpintLeft,
+        thumb_right: thumbrpintRight,
+        signature: signature,
+        lat: "27.6915196",
+        long: "85.3420486",
+      },
+    })
+    console.log("documents saved from the documents component")
+    props.history.push("/customers/register/agreement")
   }
 
   return (
@@ -103,4 +118,4 @@ function Documents() {
   )
 }
 
-export default Documents
+export default withRouter(Documents)

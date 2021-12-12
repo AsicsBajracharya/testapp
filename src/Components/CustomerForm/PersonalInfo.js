@@ -18,7 +18,7 @@ function PersonalInfo(props) {
   const initialState = {
     fullName: {
       name: "fullName",
-      value: formState.customers.full_name,
+      value: formState.formData.customers.full_name,
       hasErrors: false,
       message: "",
       touched: false,
@@ -40,14 +40,14 @@ function PersonalInfo(props) {
     },
     gender: {
       name: "gender",
-      value: formState.personal_informations.gender,
+      value: formState.formData.personal_informations.gender,
       hasErrors: false,
       message: "",
       touched: false,
     },
     maritalStatus: {
       name: "maritalStatus",
-      value: formState.personal_informations.marital_status,
+      value: formState.formData.personal_informations.marital_status,
       hasErrors: false,
       message: "",
       touched: false,
@@ -61,28 +61,28 @@ function PersonalInfo(props) {
     },
     nationality: {
       name: "nationality",
-      value: formState.personal_informations.nationality,
+      value: formState.formData.personal_informations.nationality,
       hasErrors: false,
       message: "",
       touched: false,
     },
     typeOfId: {
       name: "typeOfId",
-      value: formState.personal_informations.identity_card_type,
+      value: formState.formData.personal_informations.identity_card_type,
       hasErrors: false,
       message: "",
       touched: false,
     },
     idNo: {
       name: "idNo",
-      value: formState.personal_informations.identity_card_number,
+      value: formState.formData.personal_informations.identity_card_number,
       hasErrors: false,
       message: "",
       touched: false,
     },
     idIssueDistrict: {
       name: "idIssueDistrict",
-      value: formState.personal_informations.identity_card_issue_district,
+      value: formState.formData.personal_informations.identity_card_issue_district,
       hasErrors: false,
       message: "",
       touched: false,
@@ -104,7 +104,7 @@ function PersonalInfo(props) {
     },
     pan: {
       name: "pan",
-      value: formState.personal_informations.pan_number,
+      value: formState.formData.personal_informations.pan_number,
       hasErrors: false,
       message: "",
       touched: false,
@@ -351,7 +351,7 @@ function PersonalInfo(props) {
             <div className="input-wrapper">
               <label htmlFor="personal_information-mobile">Mobile*</label>
               <div className="input-group">
-                <input readOnly value={formState.customers.mobile} type="number" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
+                <input readOnly value={formState.formData.customers.mobile} type="number" id="personal_information-mobile" placeholder="Your 10 digit phone number" className="form-control" required />
               </div>
             </div>
           </div>
@@ -359,7 +359,7 @@ function PersonalInfo(props) {
             <div className="input-wrapper">
               <label htmlFor="personal_information-email">Email*</label>
               <div className="input-group">
-                <input readOnly value={formState.customers.email} type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
+                <input readOnly value={formState.formData.customers.email} type="text" id="dob personal_information-email" placeholder="Your email address" className="form-control" required />
               </div>
             </div>
           </div>
