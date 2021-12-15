@@ -11,16 +11,21 @@ import Verification from "./Verification"
 import Login from "./Login"
 import PersonalInfo from "./PersonalInfo"
 import ReadyDocuments from "./ReadyDocuments"
+import Guardian from "./Guardian"
 import Address from "./Address"
 import FamilyInformation from "./FamilyInformation"
 import Occupation from "./Occupation"
 import Documents from "./Documents-backup"
 import Account from "./Account"
 import Agreement from "./agreement"
+import Nominee from "./nominee"
 function CustomerForm() {
   const originalState = {
     uniqueId: "",
     saveCount: 0,
+    formLevel: 0,
+    showGuardian: false,
+    showNominee: false,
     formData: {
       customers: {
         demat_account_type: "1",
@@ -122,6 +127,22 @@ function CustomerForm() {
       case "savePersonalInfo":
         draft.formData.personal_informations = action.value
         return
+      case "minorTrue":
+        draft.formData.customers.is_minor = "2"
+        draft.showGuardian = true
+        return
+      case "minorFalse":
+        draft.formData.customers.is_minor = "1"
+        draft.showGuardian = false
+        return
+      case "nomineeTrue":
+        draft.formData.customers.nominee = "2"
+        draft.showNominee = true
+        return
+      case "nomineeFalse":
+        draft.formData.customers.nominee = "1"
+        draft.showNominee = false
+        return
       case "saveFullName":
         draft.formData.customers.full_name = action.value
         return
@@ -178,12 +199,23 @@ function CustomerForm() {
     <FormState.Provider value={state}>
       <FormDispatch.Provider value={dispatch}>
         <h3>Please fill out the form below to create your demat ac!!!!!</h3>
-        <div className="links">
+        <div className="links nav-bar nav-bar-secondary">
           <Link to="/customers/register">register</Link>
           <Link to="/customers/register/verify">verify</Link>
           <Link to="/customers/register/login">login</Link>
-          <Link to="/customers/register/dematForm/personalInfo">login</Link>
+          <Link to="/customers/register/personalInfo">PersonalInfo</Link>
+          {state.showGuardian && <Link to="/customers/register/guardian">guardian</Link>}
+
           <Link to="/customers/register/address">address</Link>
+          <Link to="/customers/register/familyInformation">familyInfo</Link>
+          {state.showNominee && <Link to="/customers/register/nominee">Nominee</Link>}
+          <Link to="/customers/register/occupation">occupation</Link>
+          <Link to="/customers/register/account">account</Link>
+          <Link to="/customers/register/documents">documents</Link>
+          <Link to="/customers/register/agreement">agreement</Link>
+        </div>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style={{ width: "25%" }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
 
         <Switch>
@@ -203,11 +235,20 @@ function CustomerForm() {
             <Route path="/customers/register/personalInfo">
               <PersonalInfo />
             </Route>
+            {state.showGuardian && (
+              <Route path="/customers/register/guardian">
+                <Guardian />
+              </Route>
+            )}
+
             <Route path="/customers/register/address">
               <Address />
             </Route>
             <Route path="/customers/register/familyInformation">
               <FamilyInformation />
+            </Route>
+            <Route path="/customers/register/nominee">
+              <Nominee />
             </Route>
             <Route path="/customers/register/occupation">
               <Occupation />

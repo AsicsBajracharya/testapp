@@ -175,6 +175,16 @@ function PersonalInfo(props) {
         draft.dobAd.hasErrors = false
         draft.dobAd.value = action.value
         draft.dobAd.dobFormatted = formatDate(action.value)
+        console.log(draft.dobAd.value.getFullYear())
+        console.log(new Date().getFullYear() - draft.dobAd.value.getFullYear())
+        const yearToday = new Date().getFullYear() - draft.dobAd.value.getFullYear()
+        if (parseInt(yearToday) < 16) {
+          console.log("year is less than 16 hyears onld")
+          formDispatch({ type: "minorTrue" })
+        } else {
+          formDispatch({ type: "minorFalse" })
+        }
+
         return
       case "idIssueDateChange":
         console.log("id issue date change reducer hit")
@@ -308,6 +318,10 @@ function PersonalInfo(props) {
         },
       })
       formDispatch({ type: "saveFullName", value: state.fullName.value })
+      if (formState.showGuardian) {
+        props.history.push("/customers/register/guardian")
+        return
+      }
       props.history.push("/customers/register/address")
     }
   }, [state.submitCount.counter])

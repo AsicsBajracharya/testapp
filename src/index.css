@@ -73,3 +73,17 @@ img {
 .documents input[type="file"] {
   display: none;
 }
+
+.nav-bar a:not(:last-child) {
+  margin-right: 24px;
+}
+
+.container-cropper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  left: 0;
+  top: 0;
+  z-index: 99;
+}

@@ -2,12 +2,12 @@
   "customers": {
     "demat_account_type": "1",
     "full_name": "Daniel Lupton",
-    "email": "Daniel_Lupton@gmail.com",
+    "email": "Daniel_Luptowqeqwn@gmail.com",
     "mobile": "9841097667",
     "username": "Daniel.Lupton",
     "password": "Test@123",
-    "is_minor": "1",
-    "nominee": "1"
+    "is_minor": "2",
+    "nominee": "2"
   },
   "personal_informations": {
     "dob": "1989-03-10",
@@ -70,13 +70,103 @@
     "type": "1"
   },
   "documents": {
-    "photo": "photo.png",
-    "gov_issued_id_front": "gov_issued_id_front.png",
-    "gov_issued_id_back": "gov_issued_id_back.png",
-    "thumb_left": "thumb_left.png",
-    "thumb_right": "thumb_right.png",
-    "signature": "signature.png",
+    "birth_certificate": "certifi.jpg",
     "lat": "27.6915196",
     "long": "85.3420486"
-  }
+  },
+
+  "relationships": [
+    {
+      "type": "1",
+      "full_name": " full_name",
+      "email": " email",
+      "relation": " relation",
+      "father_name": " father_name",
+      "grand_father_name": " grand_father_name",
+      "mobile": " mobile",
+      "addresses": [
+        {
+          "type": "1",
+          "block_number": "block_number",
+          "phone_number": "phone_number",
+          "ward_number": "ward_number",
+          "locality": "locality",
+          "municipality": "municipality",
+          "district": "district",
+          "province": "province",
+          "country": "country"
+        },
+        {
+          "type": " 2",
+          "block_number": " block_number",
+          "phone_number": " phone_number",
+          "ward_number": " ward_number",
+          "locality": " locality",
+          "municipality": " municipality",
+          "district": " district",
+          "province": " province",
+          "country": " country"
+        }
+      ],
+      "personal_informations": {
+        "identity_card_type": "citizenship",
+        "identity_card_number": "1233451234",
+        "identity_card_issue_district": "personal_informationsidentity_card_issue_district",
+        "identity_card_issue_date": "2013-12-12",
+        "pan_number": " "
+      },
+      "documents": {
+        "photo": "documentsphoto",
+        "signature": " documentssignature",
+        "gov_issued_id_front": " documentsgov_issued_id_front",
+        "gov_issued_id_back": " documentsgov_issued_id_back"
+      }
+    },
+    {
+      "type": "2",
+      "full_name": " full_name",
+      "email": " email",
+      "relation": " relation",
+      "father_name": " father_name",
+      "grand_father_name": " grand_father_name",
+      "mobile": " mobile",
+      "addresses": [
+        {
+          "type": "1",
+          "block_number": "block_number",
+          "phone_number": "phone_number",
+          "ward_number": "ward_number",
+          "locality": "locality",
+          "municipality": "municipality",
+          "district": "district",
+          "province": "province",
+          "country": "country"
+        },
+        {
+          "type": " 2",
+          "block_number": " block_number",
+          "phone_number": " phone_number",
+          "ward_number": " ward_number",
+          "locality": " locality",
+          "municipality": " municipality",
+          "district": " district",
+          "province": " province",
+          "country": " country"
+        }
+      ],
+      "personal_informations": {
+        "identity_card_type": "citizenship",
+        "identity_card_number": "1233451234",
+        "identity_card_issue_district": "personal_informationsidentity_card_issue_district",
+        "identity_card_issue_date": "2013-12-12",
+        "pan_number": " "
+      },
+      "documents": {
+        "photo": "documentsphoto",
+        "signature": " documentssignature",
+        "gov_issued_id_front": " documentsgov_issued_id_front",
+        "gov_issued_id_back": " documentsgov_issued_id_back"
+      }
+    }
+  ]
 }

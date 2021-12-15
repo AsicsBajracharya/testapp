@@ -120,6 +120,15 @@ function FamilyInformation(props) {
   function handleSubmit() {
     dispatch({ type: "validateForm" })
   }
+
+  function handleCheck(e) {
+    console.log("checkbox", e.target.checked)
+    if (e.target.checked) {
+      formDispatch({ type: "nomineeTrue" })
+    } else {
+      formDispatch({ type: "nomineeFalse" })
+    }
+  }
   return (
     <div className="card">
       <div className="card-header">
@@ -203,7 +212,7 @@ function FamilyInformation(props) {
           <div className="col-md-4">
             <div className="input-wrapper">
               <div className="input-group">
-                <input type="checkbox" class="form-input" id="family-add_nominee" />
+                <input onChange={handleCheck} type="checkbox" class="form-input" id="family-add_nominee" />
                 <label for="family-add_nominee">Do you want to add nominee?</label>
               </div>
             </div>
