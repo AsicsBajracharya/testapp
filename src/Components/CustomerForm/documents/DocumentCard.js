@@ -6,7 +6,6 @@ import ThumbprintRight from "./ThumbprintRight"
 import CitizenshipBack from "./CitizenshipBack"
 import CitizenshipFront from "./CitizenshipFront"
 import Signature from "./Signature"
-import BirthCertificate from "./BirthCertificate"
 
 function DocumentCard(props) {
   const [displayPicture, setDisplayPicture] = useState(null)
@@ -15,17 +14,7 @@ function DocumentCard(props) {
   const [citizenshipBack, setCitizenshipBack] = useState(null)
   const [citizenshipFront, setCitizenshipFront] = useState(null)
   const [signature, setSignature] = useState(null)
-  const [errors, setErros] = useState("")
-  function validateForm() {
-    console.log("validate form")
-    console.log("display picture from the documents", displayPicture)
-    if (!displayPicture || !thumbrpintLeft || !thumbrpintRight || !citizenshipBack || !citizenshipFront || !signature) {
-      setErros("please upload all the documents")
-      return
-    }
-    console.log("documents saved from the documents component")
-  }
-  console.log(props.setError, "props.seterror")
+
   return (
     <div className="card">
       <div className="card-header">Upload your documents</div>
@@ -97,17 +86,6 @@ function DocumentCard(props) {
               </div>
             </div>
           </div>
-          {/* <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Birth Certificate</p>
-              </div>
-              <div className="card-body">
-                <BirthCertificate setSignature={props.setBirthCertificate} />
-                {props.setError.birthCertificate.hasErrors && <p className="text-danger">{props.setError.birthCertificate.message}</p>}
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

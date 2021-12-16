@@ -108,6 +108,9 @@ function CustomerForm() {
         long: "85.3420486",
       },
     },
+    relationships: {},
+    relationshipsGuardian: {},
+    relationshipsNominee: {},
   }
   function ourReducer(draft, action) {
     switch (action.type) {
@@ -127,22 +130,42 @@ function CustomerForm() {
       case "savePersonalInfo":
         draft.formData.personal_informations = action.value
         return
+      case "saveGuardian":
+        draft.relationshipsGuardian = action.value
+        return
       case "minorTrue":
         draft.formData.customers.is_minor = "2"
         draft.showGuardian = true
+        draft.formData.documents = {
+          birth_certificate: "",
+        }
         return
       case "minorFalse":
         draft.formData.customers.is_minor = "1"
         draft.showGuardian = false
+        draft.formData.documents = {
+          photo: "",
+          gov_issued_id_front: "",
+          gov_issued_id_back: "",
+          thumb_left: "",
+          thumb_right: "",
+          signature: "",
+          lat: "27.6915196",
+          long: "85.3420486",
+        }
         return
       case "nomineeTrue":
         draft.formData.customers.nominee = "2"
         draft.showNominee = true
         return
+      case "saveNominee":
+        draft.relationshipsNominee = action.value
+        return
       case "nomineeFalse":
         draft.formData.customers.nominee = "1"
         draft.showNominee = false
         return
+
       case "saveFullName":
         draft.formData.customers.full_name = action.value
         return
@@ -175,13 +198,33 @@ function CustomerForm() {
   useEffect(() => {
     const ourRequest = axios.CancelToken.source()
     if (state.saveCount) {
-      console.log("send axios request here")
+      let dataToSend = {}
+      if (state.formData.customers.is_minor == "2" && state.formData.customers.nominee == "1") {
+        console.log("the user is a minor from the customer form")
+        dataToSend = {
+          ...state.formData,
+          relationships: [state.relationshipsGuardian],
+        }
+      } else if (state.formData.customers.is_minor == "1" && state.formData.customers.nominee == "2") {
+        dataToSend = {
+          ...state.formData,
+          relationships: [state.relationshipsNominee],
+        }
+      } else if (state.formData.customers.is_minor == "2" && state.formData.customers.nominee == "2") {
+        dataToSend = {
+          ...state.formData,
+          relationships: [state.relationshipsGuardian, state.relationshipsNominee],
+        }
+      } else {
+        dataToSend = state.formData
+      }
+      console.log("data to save ", dataToSend)
       async function register() {
         try {
-          const response = await axios.post("http://localhost:8000/api/register_customer", state.formData, { cancelToken: ourRequest.token })
+          const response = await axios.post("http://localhost:8000/api/register_customer", dataToSend, { cancelToken: ourRequest.token })
           console.log("registration form submitted")
           console.log(response)
-          console.log(response.data)
+          // console.log(response.data)
           if (response.data.success) {
             //REDIRECT TO CUSTOMER PORTAL
             //RETURN

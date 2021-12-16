@@ -10,8 +10,9 @@ import DocumentCard from "./documents/DocumentCard"
 import { useImmerReducer } from "use-immer"
 import FormDispatch from "./FormDispatch"
 import { useContext } from "react"
+import { withRouter } from "react-router-dom"
 
-function Guardian() {
+function Guardian(props) {
   const formDispatch = useContext(FormDispatch)
   // // const [displayPicture, setDisplayPicture] = useState("")
   // const [thumbrpintLeft, setThumbprintLeft] = useState("")
@@ -90,6 +91,7 @@ function Guardian() {
         value: "",
         hasErrors: false,
         message: "",
+        dateFormatted: "",
       },
       pan: {
         name: "pan",
@@ -529,9 +531,58 @@ function Guardian() {
   }
   useEffect(() => {
     if (state.sendCount) {
-      // formDispatch({type: "saveGuardians", value: {
-      // }})
+      console.log("form dispatch form the guardians info here")
+      formDispatch({
+        type: "saveGuardian",
+        value: {
+          type: "1",
+          full_name: state.formData.nameOfGuardian.value,
+          email: state.formData.email.value,
+          relation: state.formData.relationshipWithApplicant.value,
+          father_name: state.formData.fathersName.value,
+          grand_father_name: state.formData.grandFathersName.value,
+          mobile: state.formData.mobile.value,
+          addresses: [
+            {
+              type: "1",
+              block_number: state.formData.addresses.temporary.block_number.value,
+              phone_number: state.formData.addresses.temporary.phone_number.value,
+              ward_number: state.formData.addresses.temporary.ward_number.value,
+              locality: state.formData.addresses.temporary.locality.value,
+              municipality: state.formData.addresses.temporary.municipality.value,
+              district: state.formData.addresses.temporary.district.value,
+              province: state.formData.addresses.temporary.province.value,
+              country: state.formData.addresses.temporary.country.value,
+            },
+            {
+              type: "2",
+              block_number: state.formData.addresses.permanent.block_number.value,
+              phone_number: state.formData.addresses.permanent.phone_number.value,
+              ward_number: state.formData.addresses.permanent.ward_number.value,
+              locality: state.formData.addresses.permanent.locality.value,
+              municipality: state.formData.addresses.permanent.municipality.value,
+              district: state.formData.addresses.permanent.district.value,
+              province: state.formData.addresses.permanent.province.value,
+              country: state.formData.addresses.permanent.country.value,
+            },
+          ],
+          personal_informations: {
+            identity_card_type: state.formData.typeOfIdCard.value,
+            identity_card_number: state.formData.idNo.value,
+            identity_card_issue_district: state.formData.idIssueDistrict.value,
+            identity_card_issue_date: state.formData.idIssueDate.dateFormatted,
+            pan_number: "",
+          },
+          documents: {
+            photo: state.formData.documents.displayPicture.value,
+            signature: state.formData.documents.signature.value,
+            gov_issued_id_front: state.formData.documents.citizenshipBack.value,
+            gov_issued_id_back: state.formData.documents.citizenshipFront.value,
+          },
+        },
+      })
       //dispatch form data from here
+      props.history.push("/customers/register/address")
     }
   }, [state.sendCount])
   function setDisplayPicture(e) {
@@ -555,6 +606,7 @@ function Guardian() {
   function setBirthCertificate(e) {
     dispatch({ type: "setBirthCertificate", value: e })
   }
+
   return (
     <>
       <div className="card">
@@ -885,4 +937,4 @@ function Guardian() {
   )
 }
 
-export default Guardian
+export default withRouter(Guardian)

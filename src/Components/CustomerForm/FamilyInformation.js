@@ -6,6 +6,7 @@ import FormDispatch from "./FormDispatch"
 import FormState from "./FormState"
 function FamilyInformation(props) {
   const formDispatch = useContext(FormDispatch)
+  const formState = useContext(FormState)
   const [saveCount, setSaveCount] = useState(0)
   const initialState = {
     fathersName: {
@@ -113,6 +114,10 @@ function FamilyInformation(props) {
           daughter_in_law_name: state.daughterInLawsName.value,
         },
       })
+      if (formState.showNominee) {
+        props.history.push("/customers/register/nominee")
+        return
+      }
       props.history.push("/customers/register/occupation")
     }
   }, [saveCount])

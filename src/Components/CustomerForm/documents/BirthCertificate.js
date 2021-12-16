@@ -43,7 +43,7 @@ function BirthCertificate(props) {
       setImage(croppedImageUrl)
       setCurrentImage(null)
       // props.setCitizenshipFront(image)
-      props.setCitizenshipFront(imageName)
+      props.setBirthCertificate(imageName)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")
     }

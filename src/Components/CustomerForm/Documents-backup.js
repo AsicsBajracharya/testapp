@@ -6,7 +6,9 @@ import ThumbprintRight from "./documents/ThumbprintRight"
 import CitizenshipBack from "./documents/CitizenshipBack"
 import CitizenshipFront from "./documents/CitizenshipFront"
 import Signature from "./documents/Signature"
+import BirthCertificate from "./documents/BirthCertificate"
 import FormDispatch from "./FormDispatch"
+import FormState from "./FormState"
 
 function Documents(props) {
   const [displayPicture, setDisplayPicture] = useState(null)
@@ -15,28 +17,42 @@ function Documents(props) {
   const [citizenshipBack, setCitizenshipBack] = useState(null)
   const [citizenshipFront, setCitizenshipFront] = useState(null)
   const [signature, setSignature] = useState(null)
+  const [birthCertificate, setBirthCertificate] = useState(null)
   const [errors, setErros] = useState("")
   const formDispatch = useContext(FormDispatch)
+  const formState = useContext(FormState)
   function validateForm() {
     console.log("validate form")
     console.log("display picture from the documents", displayPicture)
-    if (!displayPicture || !thumbrpintLeft || !thumbrpintRight || !citizenshipBack || !citizenshipFront || !signature) {
-      setErros("please upload all the documents")
-      return
+    // if (!displayPicture || !thumbrpintLeft || !thumbrpintRight || !citizenshipBack || !citizenshipFront || !signature) {
+    //   setErros("please upload all the documents")
+    //   return
+    // }
+    if (!formState.showGuardian) {
+      formDispatch({
+        type: "saveDocuments",
+        value: {
+          photo: displayPicture,
+          gov_issued_id_front: citizenshipFront,
+          gov_issued_id_back: citizenshipFront,
+          thumb_left: thumbrpintLeft,
+          thumb_right: thumbrpintRight,
+          signature: signature,
+          lat: "27.6915196",
+          long: "85.3420486",
+        },
+      })
+    } else {
+      formDispatch({
+        type: "saveDocuments",
+        value: {
+          birth_certificate: birthCertificate,
+          lat: "27.6915196",
+          long: "85.3420486",
+        },
+      })
     }
-    formDispatch({
-      type: "saveDocuments",
-      value: {
-        photo: displayPicture,
-        gov_issued_id_front: citizenshipFront,
-        gov_issued_id_back: citizenshipFront,
-        thumb_left: thumbrpintLeft,
-        thumb_right: thumbrpintRight,
-        signature: signature,
-        lat: "27.6915196",
-        long: "85.3420486",
-      },
-    })
+
     console.log("documents saved from the documents component")
     props.history.push("/customers/register/agreement")
   }
@@ -45,69 +61,84 @@ function Documents(props) {
     <div className="card">
       <div className="card-header">Upload your documents</div>
       <div className="card-body">
-        <div className="row">
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Profile Picture</p>
+        {!formState.showGuardian && (
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Profile Picture</p>
+                </div>
+                <div className="card-body">
+                  <DisplpayPicture setDisplayPicture={setDisplayPicture} setErrors={setErros} />
+                </div>
               </div>
-              <div className="card-body">
-                <DisplpayPicture setDisplayPicture={setDisplayPicture} setErrors={setErros} />
+            </div>
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Thumbprint Left</p>
+                </div>
+                <div className="card-body">
+                  <ThumbPrintLeft setThumbprintLeft={setThumbprintLeft} setErrors={setErros} />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Thumbprint Right</p>
+                </div>
+                <div className="card-body">
+                  <ThumbprintRight setThumbprintRight={setThumbprintRight} setErrors={setErros} />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Citizenship card back</p>
+                </div>
+                <div className="card-body">
+                  <CitizenshipBack setCitizenshipBack={setCitizenshipBack} setErrors={setErros} />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Citizenship card back</p>
+                </div>
+                <div className="card-body">
+                  <CitizenshipFront setCitizenshipFront={setCitizenshipFront} setErrors={setErros} />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Signature</p>
+                </div>
+                <div className="card-body">
+                  <Signature setSignature={setSignature} setErrors={setErros} />
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Thumbprint Left</p>
-              </div>
-              <div className="card-body">
-                <ThumbPrintLeft setThumbprintLeft={setThumbprintLeft} setErrors={setErros} />
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Thumbprint Right</p>
-              </div>
-              <div className="card-body">
-                <ThumbprintRight setThumbprintRight={setThumbprintRight} setErrors={setErros} />
+        )}
+        {formState.showGuardian && (
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-header">
+                  <p className="lead">Your Birth Certificate</p>
+                </div>
+                <div className="card-body">
+                  <BirthCertificate setBirthCertificate={setBirthCertificate} setErrors={setErros} />
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Citizenship card back</p>
-              </div>
-              <div className="card-body">
-                <CitizenshipBack setCitizenshipBack={setCitizenshipBack} setErrors={setErros} />
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Citizenship card back</p>
-              </div>
-              <div className="card-body">
-                <CitizenshipFront setCitizenshipFront={setCitizenshipFront} setErrors={setErros} />
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <p className="lead">Your Signature</p>
-              </div>
-              <div className="card-body">
-                <Signature setSignature={setSignature} setErrors={setErros} />
-              </div>
-            </div>
-          </div>
-        </div>
-        {errors && <p className="text-danger">{errors}</p>}
+        )}
       </div>
       <div className="card-footer">
         <span className="btn btn-primary" onClick={validateForm}>

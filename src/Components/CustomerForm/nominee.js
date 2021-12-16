@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Calendar from "@sbmdkl/nepali-datepicker-reactjs"
 import "@sbmdkl/nepali-datepicker-reactjs/dist/index.css"
 import DatePicker from "react-datepicker"
@@ -8,8 +8,11 @@ import districts from "../../Assets/district-list-nepal"
 import provinceData from "../../Assets/province-district.json"
 import DocumentCard from "./documents/DocumentCard"
 import { useImmerReducer } from "use-immer"
+import { withRouter } from "react-router-dom"
+import FormDispatch from "./FormDispatch"
 
-function Nominee() {
+function Nominee(props) {
+  const formDispatch = useContext(FormDispatch)
   // // const [displayPicture, setDisplayPicture] = useState("")
   // const [thumbrpintLeft, setThumbprintLeft] = useState("")
   // const [thumbrpintRight, setThumbprintRight] = useState("")
@@ -266,12 +269,6 @@ function Nominee() {
           message: "",
           required: true,
         },
-        birthCertificate: {
-          value: "",
-          hasErrors: false,
-          message: "",
-          required: false,
-        },
       },
     },
   }
@@ -465,6 +462,7 @@ function Nominee() {
         for (const key in draft.formData.documents) {
           console.log("the loop now runs for the documents seciton foo the guardian")
           if (draft.formData.documents[key].value == "") {
+            draft.errorCount++
             draft.formData.documents[key].hasErrors = true
             draft.formData.documents[key].message = "this document is required"
           }
@@ -523,6 +521,63 @@ function Nominee() {
     console.log("handle submit function")
     dispatch({ type: "validateForm" })
   }
+
+  useEffect(() => {
+    if (state.sendCount) {
+      console.log("form dispatch form the nominee info here")
+      formDispatch({
+        type: "saveNominee",
+        value: {
+          type: "2",
+          full_name: state.formData.nameOfGuardian.value,
+          email: state.formData.email.value,
+          relation: state.formData.relationshipWithApplicant.value,
+          father_name: state.formData.fathersName.value,
+          grand_father_name: state.formData.grandFathersName.value,
+          mobile: state.formData.mobile.value,
+          addresses: [
+            {
+              type: "1",
+              block_number: state.formData.addresses.temporary.block_number.value,
+              phone_number: state.formData.addresses.temporary.phone_number.value,
+              ward_number: state.formData.addresses.temporary.ward_number.value,
+              locality: state.formData.addresses.temporary.locality.value,
+              municipality: state.formData.addresses.temporary.municipality.value,
+              district: state.formData.addresses.temporary.district.value,
+              province: state.formData.addresses.temporary.province.value,
+              country: state.formData.addresses.temporary.country.value,
+            },
+            {
+              type: "2",
+              block_number: state.formData.addresses.permanent.block_number.value,
+              phone_number: state.formData.addresses.permanent.phone_number.value,
+              ward_number: state.formData.addresses.permanent.ward_number.value,
+              locality: state.formData.addresses.permanent.locality.value,
+              municipality: state.formData.addresses.permanent.municipality.value,
+              district: state.formData.addresses.permanent.district.value,
+              province: state.formData.addresses.permanent.province.value,
+              country: state.formData.addresses.permanent.country.value,
+            },
+          ],
+          personal_informations: {
+            identity_card_type: state.formData.typeOfIdCard.value,
+            identity_card_number: state.formData.idNo.value,
+            identity_card_issue_district: state.formData.idIssueDistrict.value,
+            identity_card_issue_date: state.formData.idIssueDate.dateFormatted,
+            pan_number: "",
+          },
+          documents: {
+            photo: state.formData.documents.displayPicture.value,
+            signature: state.formData.documents.signature.value,
+            gov_issued_id_front: state.formData.documents.citizenshipBack.value,
+            gov_issued_id_back: state.formData.documents.citizenshipFront.value,
+          },
+        },
+      })
+      //dispatch form data from here
+      props.history.push("/customers/register/occupation")
+    }
+  }, [state.sendCount])
   function setDisplayPicture(e) {
     dispatch({ type: "setDisplayPicture", value: e })
   }
@@ -874,4 +929,4 @@ function Nominee() {
   )
 }
 
-export default Nominee
+export default withRouter(Nominee)
