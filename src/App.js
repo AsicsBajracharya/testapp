@@ -15,11 +15,14 @@ import DispatchContext from "./DispatchContext"
 import { useEffect } from "react"
 function App() {
   const initialState = {
-    adminLoggedIn: false,
+    adminLoggedIn: Boolean(localStorage.getItem("GurkhasAdminToken")),
     user: {
-      uniqueId: "",
-      username: "",
-      password: "",
+      data: {
+        token: localStorage.getItem("GurkhasAdminToken"),
+        user: {
+          email: localStorage.getItem("GurkhasAdminUsername"),
+        },
+      },
     },
   }
 
@@ -29,9 +32,9 @@ function App() {
     switch (action.type) {
       case "adminLogin":
         draft.adminLoggedIn = true
-        draft.user = action.data
+        draft.user = action.value
         return
-      case "adminLogOut":
+      case "adminLogout":
         draft.adminLoggedIn = false
         return
       case "otpSend":

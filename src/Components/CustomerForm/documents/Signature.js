@@ -43,7 +43,7 @@ function Signature(props) {
       setImage(croppedImageUrl)
       setCurrentImage(null)
       // props.setSignature(image)
-      props.setSignature(imageName)
+      props.setSignature(image)
       props.setErrors(null)
     } catch (e) {
       console.log(e, "there was an error while getting the cropped image")

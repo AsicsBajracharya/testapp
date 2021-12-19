@@ -12,8 +12,8 @@ function AdminLoggedOut(props) {
     e.preventDefault()
     try {
       const response = await axios.post(`http://localhost:8000/api/login`, { email, password })
-      console.log(response.data)
-      appDispatch({ type: "adminLogin", data: response.data })
+      console.log(response.data.data)
+      appDispatch({ type: "adminLogin", value: response.data })
       props.history.push("/admin/dashboard")
     } catch (e) {
       console.log(e, "there was an error")

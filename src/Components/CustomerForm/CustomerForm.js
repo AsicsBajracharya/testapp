@@ -225,12 +225,12 @@ function CustomerForm() {
           console.log("registration form submitted")
           console.log(response)
           // console.log(response.data)
-          if (response.data.success) {
-            //REDIRECT TO CUSTOMER PORTAL
-            //RETURN
-          }
+          // if (response.data.success) {
+          //   //REDIRECT TO CUSTOMER PORTAL
+          //   //RETURN
+          // }
         } catch (e) {
-          console.log(e, "there was an error")
+          console.log(e.response, "there was an error")
         }
       }
       register()

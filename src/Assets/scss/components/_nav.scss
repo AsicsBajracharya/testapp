@@ -1,0 +1,14 @@
+.nav {
+  border: 5px solid green;
+  display: flex;
+  justify-content: flex-end;
+  .nav-list {
+    list-style: none;
+    display: flex;
+    .nav-item {
+      &:not(:last-child) {
+        margin-right: 2rem;
+      }
+    }
+  }
+}
