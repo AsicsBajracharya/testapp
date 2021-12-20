@@ -1,7 +1,14 @@
 import React, { useContext, useEffect } from "react"
-import { withRouter } from "react-router"
+import { withRouter, Switch, Route } from "react-router"
+//COMPONENTS
 
+import Sidebar from "./Admin/Sidebar"
 import Header from "./Admin/Header"
+import Dashboard from "./Admin/Dashboard"
+import Users from "./Admin/Users"
+import Roles from "./Admin/Roles"
+import Customers from "./Admin/Customers"
+import CustomerView from "./Admin/CustomerView/CustomerView"
 //CONTEXTS
 import DispatchContext from "../DispatchContext"
 import StateContext from "../StateContext"
@@ -14,16 +21,31 @@ function AdminDashboard(props) {
       props.history.push("/admin")
     }
   }, [])
-  function handleLogout(e) {
-    e.preventDefault()
-    appDispatch({ type: "adminLogout" })
-    props.history.push("/admin")
-  }
+
   return (
-    <>
-      <Header />
-      <button onClick={handleLogout}>logout</button>
-    </>
+    <div className="dashboard-container">
+      <Sidebar />
+      <div className="dashboard-content">
+        <Header />
+        <Switch>
+          <Route path="/admin/dashboard" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/admin/dashboard/users" exact>
+            <Users />
+          </Route>
+          <Route path="/admin/dashboard/roles" exact>
+            <Roles />
+          </Route>
+          <Route path="/admin/dashboard/customers" exact>
+            <Customers />
+          </Route>
+          <Route path="/admin/dashboard/customers/:id" exact>
+            <CustomerView />
+          </Route>
+        </Switch>
+      </div>
+    </div>
   )
 }
 

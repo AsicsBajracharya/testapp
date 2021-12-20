@@ -54,9 +54,11 @@ function App() {
       console.log("user data", state.user)
       localStorage.setItem("GurkhasAdminToken", state.user.data.token)
       localStorage.setItem("GurkhasAdminUsername", state.user.data.user.email)
+      localStorage.setItem("GurkhasAdminData", JSON.stringify(state.user.data))
     } else {
       localStorage.removeItem("GurkhasAdminToken")
       localStorage.removeItem("GurkhasAdminUsername")
+      localStorage.removeItem("GurkhasAdminData")
     }
   }, [state.adminLoggedIn])
 
@@ -72,7 +74,7 @@ function App() {
           <Route path="/admin" exact>
             <AdminLoggedOut />
           </Route>
-          <Route path="/admin/dashboard" exact>
+          <Route path="/admin/dashboard">
             <AdminDashboard />
           </Route>
           <Route path="/login" exact>

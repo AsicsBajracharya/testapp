@@ -1,11 +1,19 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell } from "@fortawesome/free-solid-svg-icons"
 import logo from "../../Assets/images/logo.png"
+import avatar from "../../Assets/images/avatar-small.jpg"
+import DropDown from "./Dropdown"
+import { AppBar, Toolbar, IconButton } from "@material-ui/core"
+import MenuIcon from "@mui/icons-material/Menu"
 function Header() {
+  const [showMenu, setShowMenu] = useState(false)
+  function showDropDown() {
+    setShowMenu(!showMenu)
+  }
   return (
     <header>
-      <div className="container">
+      <div className="container-fluid ">
         <div className="row">
           <div className="col-md-3">
             <div className="image-container">
@@ -25,11 +33,14 @@ function Header() {
                 <li className="nav-item">
                   <FontAwesomeIcon icon={faBell} />
                 </li>
-                <li className="nav-item">
-                  <div className="d-flex">
-                    <div className="image-container"></div>
+                <li className="nav-item nav-item-has-children">
+                  <div onClick={showDropDown} className="d-flex align-items-center">
+                    <div className="image-container avatar">
+                      <img src={avatar} alt="" />
+                    </div>
                     <p>user name</p>
                   </div>
+                  {showMenu && <DropDown />}
                 </li>
               </ul>
             </nav>

@@ -13,10 +13,10 @@
 @import "layout/header", "layout/footer";
 
 // 5. Components
-@import "components/button", "components/nav";
+@import "components/button", "components/nav", "components/sidebar";
 
 // 6. Page-specific styles
-@import "pages/home";
+@import "pages/home", "pages/dashboard";
 
 // 7. Themes
 @import "themes/default";

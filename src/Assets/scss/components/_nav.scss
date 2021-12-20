@@ -1,14 +1,28 @@
 .nav {
-  border: 5px solid green;
   display: flex;
   justify-content: flex-end;
   .nav-list {
     list-style: none;
     display: flex;
+    align-items: center;
     .nav-item {
       &:not(:last-child) {
         margin-right: 2rem;
       }
     }
+    .nav-item-has-children {
+      position: relative;
+      .drop-down {
+        position: absolute;
+        ul {
+          list-style: none;
+        }
+      }
+    }
   }
+}
+.avatar {
+  width: 44px;
+  border-radius: 50%;
+  overflow: hidden;
 }

@@ -1,0 +1,7 @@
+.dashboard-container {
+  display: flex;
+  .dashboard-content {
+    border: 2px solid green;
+    flex-grow: 1;
+  }
+}

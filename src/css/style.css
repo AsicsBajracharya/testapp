@@ -334,12 +334,16 @@ a {
 h3 {
   color: white; }
 
-.border {
-  border: 1px solid green; }
-
 * {
   margin: 0;
   padding: 0; }
+
+body {
+  background-color: transparent; }
+
+img {
+  width: 100%;
+  height: auto; }
 
 /**
  * Basic typography style for copy text
@@ -408,11 +412,33 @@ p {
   width: 1px; }
 
 .nav {
-  border: 5px solid green;
   display: flex;
   justify-content: flex-end; }
   .nav .nav-list {
     list-style: none;
-    display: flex; }
+    display: flex;
+    align-items: center; }
     .nav .nav-list .nav-item:not(:last-child) {
       margin-right: 2rem; }
+    .nav .nav-list .nav-item-has-children {
+      position: relative; }
+      .nav .nav-list .nav-item-has-children .drop-down {
+        position: absolute; }
+        .nav .nav-list .nav-item-has-children .drop-down ul {
+          list-style: none; }
+
+.avatar {
+  width: 44px;
+  border-radius: 50%;
+  overflow: hidden; }
+
+.sidebar {
+  border: 1px solid green;
+  width: 200px;
+  height: 100vh; }
+
+.dashboard-container {
+  display: flex; }
+  .dashboard-container .dashboard-content {
+    border: 2px solid green;
+    flex-grow: 1; }
