@@ -26,3 +26,14 @@
   border-radius: 50%;
   overflow: hidden;
 }
+
+.secondary-navigation {
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    li:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}

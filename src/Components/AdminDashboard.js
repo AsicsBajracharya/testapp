@@ -40,7 +40,7 @@ function AdminDashboard(props) {
           <Route path="/admin/dashboard/customers" exact>
             <Customers />
           </Route>
-          <Route path="/admin/dashboard/customers/:id" exact>
+          <Route path="/admin/dashboard/customers/:id">
             <CustomerView />
           </Route>
         </Switch>

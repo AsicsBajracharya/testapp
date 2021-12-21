@@ -50,7 +50,7 @@ function Customers() {
         </ul>
       </div>
       <div className="table-data">
-        <table class="table">
+        <table className="table">
           <tr>
             <th>S.No</th>
             <th>REGISTRATION NO</th>
