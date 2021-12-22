@@ -13,17 +13,47 @@ import Nominee from "./Nominee"
 import Occupation from "./Occupation"
 import Account from "./Account"
 import Documents from "./Documents"
+import RejectPanel from "./rejectPanel"
 function CustomerView() {
   const appState = useContext(StateContext)
   const { id } = useParams()
   const initialState = {
+    userLoaded: false,
+    hasNominee: false,
+    nomineeData: {},
+    hasGuardian: false,
+    guardianData: {},
     userData: {},
+    temporaryAddress: {},
+    permanentAddress: {},
+    showRejectPanel: false,
   }
 
   function ourReducer(draft, action) {
     switch (action.type) {
       case "loadUser":
         draft.userData = action.value
+
+        return
+      case "userLoaded":
+        draft.userLoaded = true
+        return
+      case "hasNominee":
+        draft.hasNominee = true
+        draft.nomineeData = action.value
+        return
+      case "hasGuardian":
+        draft.hasGuardian = true
+        draft.guardianData = action.value
+        return
+      case "updateTemporaryAddress":
+        draft.temporaryAddress = action.value
+        return
+      case "updatePermanentAddress":
+        draft.permanentAddress = action.value
+        return
+      case "toggleRejectPanel":
+        draft.showRejectPanel = !draft.showRejectPanel
         return
       case "default":
         return
@@ -31,15 +61,31 @@ function CustomerView() {
   }
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
   useEffect(() => {
-    const ourRequest = axios.CancelToken.source()
-    async function fetchCustomer() {
-      try {
-        // const response = await axios.get()
-      } catch (e) {}
+    if (state.userLoaded) {
+      if (state.userData.relationships && state.userData.relationships.length) {
+        state.userData.relationships.map((item, i) => {
+          console.log(item.type, "item type ffrom the useeffect")
+          if (item.type == "nominee") {
+            dispatch({ type: "hasNominee", value: item })
+          }
+          if (item.type == "guardian") {
+            dispatch({ type: "hasGuardian", value: item })
+          }
+        })
+      }
+      if (state.userData.addresses && state.userData.addresses.length) {
+        state.userData.addresses.map((item, i) => {
+          console.log(item.type, "item type ffrom the useeffect")
+          if (item.type == "temporary") {
+            dispatch({ type: "updateTemporaryAddress", value: item })
+          }
+          if (item.type == "permanent") {
+            dispatch({ type: "updatePermanentAddress", value: item })
+          }
+        })
+      }
     }
-    fetchCustomer()
-    return () => ourRequest.cancel()
-  }, [])
+  }, [state.userLoaded])
 
   useEffect(() => {
     const ourRequest = axios.CancelToken.source()
@@ -48,6 +94,7 @@ function CustomerView() {
         const response = await axios.get(`http://localhost:8000/api/customers/${id}`, { headers: { Authorization: `Bearer ${appState.user.data.token}` } }, { cancelToken: ourRequest.token })
         console.log(response.data.data)
         dispatch({ type: "loadUser", value: response.data.data })
+        dispatch({ type: "userLoaded" })
       } catch (e) {
         console.log(e, "there was an error fetching customers")
       }
@@ -55,19 +102,37 @@ function CustomerView() {
     fetchCustomers()
     return () => ourRequest.cancel()
   }, [])
-  console.log(state.userData.id)
-  if (!state.userData.id) {
+
+  function toggleRejectPanel() {
+    console.log("hello")
+    dispatch({ type: "toggleRejectPanel" })
+  }
+
+  if (!state.userLoaded) {
     return <div>Loading ...</div>
   }
-  console.log(state.userData.id)
+  console.log(state.userData.personal_informations && state.userData.personal_informations[0])
   return (
     <div>
+      <Link to="/admin/dashboard/customers"> back to customer list</Link>
+      <div className="button-group">
+        <span onClick={toggleRejectPanel} className="btn btn-danger d-inline-block">
+          Reject
+        </span>
+        <span className="btn btn-success d-inline-block">Approve</span>
+      </div>
+      {state.showRejectPanel && (
+        <div className="reject-panel-container">
+          <RejectPanel />
+        </div>
+      )}
+
       <div className="secondary-navigation">
         <ul>
           <li>
             <Link to={`/admin/dashboard/customers/${id}`}>Personal Info</Link>
           </li>
-          {state.userData.relationships.length && (
+          {state.hasGuardian && (
             <li>
               <Link to={`/admin/dashboard/customers/${id}/guardian`}>Guardian</Link>
             </li>
@@ -78,7 +143,7 @@ function CustomerView() {
           <li>
             <Link to={`/admin/dashboard/customers/${id}/family`}>Family</Link>
           </li>
-          {state.userData.relationships.length >= 1 && (
+          {state.hasNominee && (
             <li>
               <Link to={`/admin/dashboard/customers/${id}/nominee`}>Nominee</Link>
             </li>
@@ -96,28 +161,28 @@ function CustomerView() {
       </div>
       <Switch>
         <Route path="/admin/dashboard/customers/:id" exact>
-          <PersonalInfo fullName={state.userData.full_name} userName={state.userData.username} mobile={state.userData.mobile} email={state.userData.email} isMinor={state.userData.is_minor} nominee={state.userData.nominee} accountType={state.userData.demat_account_type} dematAcType={state.userData.demat_account_type} personalInfo={state.userData.personal_information.length && state.userData.personal_information[0]} />
+          <PersonalInfo fullName={state.userData.full_name} userName={state.userData.username} mobile={state.userData.mobile} email={state.userData.email} isMinor={state.userData.is_minor} nominee={state.userData.nominee} accountType={state.userData.demat_account_type} dematAcType={state.userData.demat_account_type} personalInfo={state.userData.personal_information ? state.userData.personal_information[0] : ""} />
         </Route>
         <Route path="/admin/dashboard/customers/:id/guardian" exact>
-          {state.userData.relationships.length && <Guardian guardian={state.userData.relationships.length ? state.userData.relationships[0] : ""} />}
+          {state.hasGuardian && <Guardian guardian={state.guardianData} />}
         </Route>
         <Route path="/admin/dashboard/customers/:id/address" exact>
-          <Address temporary={state.userData.addresses.length && state.userData.addresses[0]} permanent={state.userData.addresses.length && state.userData.addresses[1]} />
+          <Address temporary={state.temporaryAddress} permanent={state.permanentAddress} />
         </Route>
         <Route path="/admin/dashboard/customers/:id/family" exact>
-          <Family family={state.userData.families.length && state.userData.families[0]} />
+          <Family family={state.userData.families ? state.userData.families[0] : ""} />
         </Route>
         <Route path="/admin/dashboard/customers/:id/nominee" exact>
-          {state.userData.relationships.length >= 1 && <Nominee nominee={state.userData.relationships.length ? state.userData.relationships[1] : ""} />}
+          {state.hasNominee ? <Nominee nominee={state.hasNominee ? state.nomineeData : ""} /> : ""}
         </Route>
         <Route path="/admin/dashboard/customers/:id/occupation" exact>
-          <Occupation occupation={state.userData.occupations.length && state.userData.occupations[0]} />
+          <Occupation occupation={state.userData.occupations.length ? state.userData.occupations[0] : ""} />
         </Route>
         <Route path="/admin/dashboard/customers/:id/account" exact>
-          <Account account={state.userData.accounts.length && state.userData.accounts[0]} />
+          <Account account={state.userData.accounts ? state.userData.accounts[0] : ""} />
         </Route>
         <Route path="/admin/dashboard/customers/:id/documents" exact>
-          <Documents documents={state.userData.documents.length && state.userData.documents[0]} />
+          <Documents documents={state.userData.documents ? state.userData.documents[0] : ""} />
         </Route>
       </Switch>
     </div>
