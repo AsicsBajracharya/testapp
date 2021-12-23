@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { userImmerReducer } from "use-immer"
-
+import React, { useEffect } from "react"
+import { useImmerReducer, userImmerReducer } from "use-immer"
 const mainCategory = [
   {
     id: "1",
@@ -90,76 +89,89 @@ const mainCategory = [
   },
 ]
 function RejectPanel() {
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [fieldList, setFieldList] = useState(null)
-  const [badgeList, setBadgeList] = useState([])
-
-  function categoryChange(e) {
-    console.log(e.target.value)
-    mainCategory.map((item, i) => {
-      if (e.target.value == item.id) {
-        console.log("item.name", item.name)
-        setSelectedCategory(item.id)
-        setFieldList(item.data)
-      }
-    })
+  const initialState = {
+    categoryListLoadCount: 0,
+    fieldListLoadCount: 0,
+    categoryList: [],
+    selectedCategory: "",
+    fieldList: [],
+    badgeList: [],
   }
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "loadMainCategory":
+        draft.categoryList.push(action.value)
+        return
+      case "mainCategoryLoaded":
+        draft.categoryListLoadCount++
+        return
+      case "mainCategoryChange":
+        draft.fieldList = []
+        draft.selectedCategory = mainCategory.filter((item) => {
+          return item.name == action.value
+        })
+        draft.selectedCategory = draft.selectedCategory[0]
+        console.log(draft.selectedCategory)
+        //load sub category
+        // if (draft.selectedCategory.data) {
+        //   draft.fieldList.push(
+        //     draft.selectedCategory.data.map((item, i) => {
+        //       return item.name
+        //     })
+        //   )
+        // }
+        return
+      case "loadFieldList":
+        draft.fieldList.push(action.value)
+        return
+      case "default":
+        return
+    }
+  }
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
-  function fieldDropdownChange(e) {
-    console.log(e.target.value)
-    const selected = mainCategory.filter((item) => {
-      return item.id == selectedCategory
-    })
-    console.log("selected category", typeof selected, selected, selected[0].data)
-    selected[0].data &&
-      selected[0].data.map((item, i) => {
-        if (item.id == e.target.value) {
-          setBadgeList([...badgeList, item.name])
-          console.log(item.name)
-        }
+  useEffect(() => {
+    if (state.selectedCategory.data) {
+      state.selectedCategory.data.map((item, i) => {
+        dispatch({ type: "loadFieldList", value: item.name })
       })
+    }
+  }, [state.fieldListLoadCount])
+  useEffect(() => {
+    if (state.categoryList && !state.categoryList.length) {
+      console.log("fetch the category list here")
+      mainCategory.map((item, i) => {
+        dispatch({ type: "loadMainCategory", value: item.name })
+      })
+      dispatch({ typ: "mainCategoryLoaded" })
+    }
+  }, [state.categoryListLoadCount])
+
+  useEffect(() => {
+    console.log("categories loaded on state")
+  }, [state.categoryListLoadCount])
+
+  function mainCategoryChange(e) {
+    console.log(e.target.value)
+    dispatch({ type: "mainCategoryChange", value: e.target.value })
   }
   return (
-    <div className="d-flex">
+    <div className="row">
       <div className="input-wrapper">
-        <label htmlFor="main-category">Selec main Category</label>
-        <div className="input-group">
-          <select className="form-control" onChange={categoryChange} name="main-category" id="">
-            {mainCategory.map((item, i) => {
-              return (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-      </div>
-      <div className="input-wrapper">
-        <label htmlFor="main-category">Select Field</label>
-        <div className="input-group">
-          <select onChange={fieldDropdownChange} className="form-control" name="main-category" id="">
-            {fieldList &&
-              fieldList.map((item, i) => {
-                return (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                )
-              })}
-          </select>
-        </div>
-      </div>
-      <div className="input-wrapper">
-        {badgeList &&
-          badgeList.map((item, i) => {
-            return (
-              <span key={i} className="badge">
-                {item}
-              </span>
-            )
+        <select name="" id="" className="main-category" onChange={mainCategoryChange}>
+          {state.categoryList.map((item, i) => {
+            return <option value={item}>{item}</option>
           })}
+        </select>
       </div>
+      <div className="input-wrapper">
+        <select name="" id="" className="sub-category">
+          {state.fieldList.map((item, i) => {
+            return <option value={item}>{item}</option>
+          })}
+        </select>
+      </div>
+      <div className="input-wrapper"></div>
     </div>
   )
 }
