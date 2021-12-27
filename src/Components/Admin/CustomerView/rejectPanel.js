@@ -62,6 +62,60 @@ const mainCategory = [
   {
     id: "2",
     name: "Guardian",
+    data: [
+      {
+        id: "1",
+        name: "Full Name",
+      },
+      {
+        id: "2",
+        name: "Mobile",
+      },
+      {
+        id: "3",
+        name: "Email",
+      },
+      {
+        id: "4",
+        name: "DOB",
+      },
+      {
+        id: "5",
+        name: "Gender",
+      },
+      {
+        id: "6",
+        name: "Marital Status",
+      },
+      {
+        id: "7",
+        name: "Nationality",
+      },
+      {
+        id: "8",
+        name: "Account Type",
+      },
+      {
+        id: "9",
+        name: "Id Card Number",
+      },
+      {
+        id: "10",
+        name: "Id Card Type",
+      },
+      {
+        id: "11",
+        name: "Id Card Issue Date",
+      },
+      {
+        id: "12",
+        name: "Id Card Issue District",
+      },
+      {
+        id: "13",
+        name: "PAN No",
+      },
+    ],
   },
   {
     id: "3",
@@ -112,14 +166,14 @@ function RejectPanel() {
         })
         draft.selectedCategory = draft.selectedCategory[0]
         console.log(draft.selectedCategory)
-        //load sub category
-        // if (draft.selectedCategory.data) {
-        //   draft.fieldList.push(
-        //     draft.selectedCategory.data.map((item, i) => {
-        //       return item.name
-        //     })
-        //   )
-        // }
+        // load sub category
+        if (draft.selectedCategory.data) {
+          draft.fieldList.push(
+            draft.selectedCategory.data.map((item, i) => {
+              return item.name
+            })
+          )
+        }
         return
       case "loadFieldList":
         draft.fieldList.push(action.value)

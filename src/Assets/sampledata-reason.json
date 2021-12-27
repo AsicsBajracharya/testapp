@@ -1,0 +1,119 @@
+{
+  "customers": {
+    "status": "5"
+  },
+  "reason": {
+    "personal_information": {
+      "firstname": "asddfasdf",
+      "middlename": "asdfsadfsaf",
+      "lastname": "asdfsadfsadf",
+      "mobile": "asdfasdfasdf",
+      "email": "asdfsadfasdf",
+      "minor": "asdfsadf",
+      "dob": "asdfasdf",
+      "maritial_status": "asdfsafdasdfasdf",
+      "gender": "asdfsadfasdf",
+      "account_type": "asdfsadf",
+      "ID_card_number": "asdfasdfasdf",
+      "ID_card_type": "asdfasdfdf",
+      "ID_issue_date": "asdfasdfasdf",
+      "ID_card_issue_district": "asdfasdf",
+      "pan": "asdfasdfasdfasdf"
+    },
+    "address": {
+      "temporary_country": "asdfasdfasdf",
+      "temporary_province": "asdfasdfsadf",
+      "temporary_district": "asdfasdfsdaf",
+      "temporary_municipality": "asdfasdfasdf",
+      "temporary_ward_no": "asdfasdfsadf",
+      "temporary_street": "asdfasdf",
+      "temporary_telephone_no": "asfdasdfasdf",
+      "temporary_block": "asdfasdfasdf",
+      "permanent_country": "asdfasdfsadf",
+      "permanent_province": "asdfasdfsadf",
+      "permanent_district": "asdfasdfasdf",
+      "permanent_muncipality": "asdfasdf",
+      "permanent_ward_no": "asdfasdfsadf",
+      "permanent_street": "asdfasdf",
+      "permanent_telephone_no": "asdfsadfasdfasdfasdf",
+      "permanent_block_no": "asdfasdfsadfasdfasdfasdfasdfasdf"
+    },
+    "family": {
+      "father's_name": "asdfas",
+      "mother's_name": "dfasdfasdf",
+      "spouse's_name": "sdfasdfasdf",
+      "daughter-in_law's_name": "asdfa",
+      "father_in_law's_name": "dfasdfas",
+      "son's_name": "asdfasfd"
+    },
+    "nominee": {
+      "name": "asdfasdfasdf",
+      "relationship": "asdfasdfasdf",
+      "father's_name": "asdf",
+      "grandfather's_name": "asdfasdf",
+      "id_card_type": "asdfsadfasdf",
+      "ID_card_number": "asdfasdfasfd",
+      "id_issue_district": "asdfasdf",
+      "ID_expiry_date": "asdfasdfsafd",
+      "id_issue_date": "asdfasdf",
+      "pan": "asdfasdfasdf",
+      "permanent_country": "asdfasdfasdf",
+      "permanent_province": "asdfasdfasfd",
+      "permanent_district": "asdfasdfasfd",
+      "permanent_municipality": "asdfsadfasdf",
+      "permanent_ward_no": "asdfasdfsadf",
+      "permanent_street": "asdfasdfasdf",
+      "permanent_telephone_no": "asdfasdfasdf",
+      "permanent_block_no": "asdfasdfasdfasdf",
+      "temporary_country": "asdfasdfasdf",
+      "temporary_district": "asdfasdfasdf",
+      "temporary_municipality": "asdfasdf",
+      "temporary_ward_no": "asdfasfasdf",
+      "temporary_street": "asdfasdf",
+      "temporary_telephone_no": "asdfasdf",
+      "temporary_block": "asdfasdfasdf"
+    },
+    "guardian": {
+      "name": "asdfasdfasdfasdf",
+      "relationship": "asdfasdfasdf",
+      "ID_card_type": "asdfasdfsa",
+      "mobile": "saddfasdfa",
+      "ID_issue_district": "asdfasdfsa",
+      "ID_number": "asdfasdfasdf",
+      "ID_issue_date": "asdfasdfafd",
+      "ID_expiry_date": "asdfasdfasdf",
+      "permanent_country": "asdfasdfasdf",
+      "permanent_province": "asdfasdfasdf",
+      "permanent_district": "asdfasdfasf",
+      "permanent_municipality": "asdfasdfasfd",
+      "permanent_ward_no": "asdfasdf",
+      "permanent_street": "asdfasdf",
+      "permanent_telephone_no": "asasdfasdf",
+      "permanent_block_no": "asdfasdfasdf",
+      "permanent_muncipality": "asdfasdfsadf",
+      "permanent_block": "asdfasdfasdf"
+    },
+    "account": {
+      "type_of_bank": "asdfasdfasdf",
+      "bank_name": "asdfasdfasdfas",
+      "branch_name": "dfasdfasdfasdf",
+      "bank_account_no": "asdfasdfasdf",
+      "demat_renewal": "asdfasdfasdf"
+    },
+    "occupation": {
+      "occupation": "asdfasdfasdf",
+      "business-type": "asdfasdfasdf",
+      "organization-name": "asdfasdfasdf",
+      "business-address": "asdfasdfasdf",
+      "designation": "asdfasdf",
+      "income-range": "asdfasdfasdfasf"
+    },
+    "documents": {
+      "birth_certificate": "asdfasdf",
+      "display_picture": "asdfasdfasdfas",
+      "signature": "asdfasdfdasf",
+      "ID-card-front": "asdfasdfasdf",
+      "ID-card-back": "asdfasdfsadf"
+    }
+  }
+}
